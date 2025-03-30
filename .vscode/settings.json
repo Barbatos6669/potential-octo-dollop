@@ -2,6 +2,7 @@
     "files.associations": {
         "text_encoding": "cpp",
         "typeinfo": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "*.tcc": "cpp"
     }
 }
