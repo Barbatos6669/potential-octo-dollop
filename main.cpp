@@ -4,80 +4,99 @@
 
 using namespace std;
 
-class Task
-{
-    public:
-        string name;
-        string description;
+class Task {
+public:
+    int id;
+    string name;
+    string description;
 
-        // Constructor
-        Task(string n, string d) 
-        {
-            name = n;
-            description = d;
-        }
+    Task(int i, string n, string d) {
+        id = i;
+        name = n;
+        description = d;
+    }
 
-        void display()
-        {
-            cout << name << " - " << description << endl;
-        }
-
+    void display() const {
+        cout << id << ".) " << name << " - " << description << endl;
+    }
 };
 
-int main() 
-{
+int main() {
+    vector<Task> tasks;
     int menuChoice = 0;
+    int nextId = 1;
 
-    while (menuChoice != 4)
-        {
-            cout << "To-do list" << endl;
-            cout << "1. Add task" << endl;
-            cout << "2. Remove task" << endl;
-            cout << "3. View tasks" << endl;
-            cout << "4. Exit" << endl;      
+    while (menuChoice != 4) {
+        cout << "\nTo-do list" << endl;
+        cout << "1. Add task" << endl;
+        cout << "2. Remove task" << endl;
+        cout << "3. View tasks" << endl;
+        cout << "4. Exit" << endl;
+        cout << "Choose an option: ";
+        cin >> menuChoice;
 
-            cin >> menuChoice;
+        switch (menuChoice) {
+        case 1: {
+            cin.ignore(); // Clear newline
+            string taskName, taskDescription;
 
-            switch (menuChoice)
-            {
-            case 1: {
-                string taskName, taskDescription;
-                int addTaskChoice = 0;
+            cout << "Task Name: ";
+            getline(cin, taskName);
 
-                cout << "Enter Task Name: ";
-                cin >> taskName;
-                cout << "Enter Task Description: ";
-                cin >> taskDescription;
+            cout << "Task Description: ";
+            getline(cin, taskDescription);
 
-                cout << endl;
-                cout << "Added Task: " << taskName << " - " << taskDescription << endl;
-                cout << endl;
+            tasks.push_back(Task(nextId, taskName, taskDescription));
+            cout << "Task added successfully!" << endl;
+            nextId++;
 
-                cout << "Create another task" << endl;
-                cout << "1. Yes" << endl;
-                cout << "2. No" << endl;
-
-                cin >> addTaskChoice;
-
-                if (addTaskChoice == 2) {
-                    cout << "Going back to main menu....." << endl;
-                }
-                break;
-            }
-            case 2:
-                cout << "Remove Task selected" << endl;
-                break;
-            case 3:
-                cout << "View Task Selected" << endl;
-                break;
-            case 4:
-                cout << "Exit selected....Goodbye" << endl;
-                break;
-            default:
-                break;
-            }
+            break;
         }
+        case 2: {
+            if (tasks.empty()) {
+                cout << "No tasks to remove." << endl;
+                break;
+            }
+
+            int idToRemove;
+            cout << "Enter task ID to remove: ";
+            cin >> idToRemove;
+
+            bool found = false;
+            for (auto it = tasks.begin(); it != tasks.end(); ++it) {
+                if (it->id == idToRemove) {
+                    tasks.erase(it);
+                    cout << "Task removed successfully!" << endl;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                cout << "Task ID not found." << endl;
+            }
+
+            break;
+        }
+        case 3: {
+            if (tasks.empty()) {
+                cout << "No tasks in the list." << endl;
+            } else {
+                cout << "\nIncomplete tasks:\n";
+                for (const auto& task : tasks) {
+                    task.display();
+                }
+            }
+            break;
+        }
+        case 4:
+            cout << "Exit selected....Goodbye" << endl;
+            break;
+        default:
+            cout << "Invalid option. Try again." << endl;
+            break;
+        }
+    }
 
     return 0;
 }
-
