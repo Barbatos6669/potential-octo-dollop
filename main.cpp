@@ -9,10 +9,10 @@ using namespace std;
 /// @brief A simple to-do list program that allows users to add, remove, and view tasks.
 /// @details This program provides a basic command-line interface for managing tasks.  
 /// @note The program uses a vector to store tasks and allows users to add, remove, and view them.
-/// @warning This program does not include error handling for invalid user input.
 /// @exception None
 
 /// @todo [High Priority] Add a feature to mark tasks as completed.
+/// @todo [High Priority] reorganize the ids of the tasks after removing a task. 
 /// @todo [High Priority] Implement file I/O to save and load tasks from a file.
 /// @todo [Medium Priority] Add a feature to edit existing tasks.
 /// @todo [Medium Priority] Implement a feature to set task priorities (high, medium, low).
@@ -50,26 +50,35 @@ public:
     string name; ///< The name of the task.
     string description; ///< A brief description of the task.
 
+    bool completed = false; ///< Indicates whether the task is completed.
+
     /// @brief Constructor for the Task class.
     /// @details Initializes a task with an ID, name, and description.
     /// @param i The unique ID of the task.
     /// @param n The name of the task.
     /// @param d The description of the task.
+    /// @return None
+    /// @note The completed status is set to false by default.
     Task(int i, string n, string d) 
     {
         id = i;
         name = n;
         description = d;
+        completed = false; // Default to not completed
     }
 
     /// @brief Displays the task details.
     /// @details Prints the task ID, name, and description to the console.
     /// @param None
     /// @return None
-    void display() const 
-    {
-        cout << id << ".) " << name << " - " << description << endl;
-    }
+    void display() const;
+
+    /// @brief Reorganizes the task IDs after a task is removed.
+    /// @details This function updates the IDs of the tasks to be sequential after a task is removed.
+    /// @param tasks A reference to the vector of tasks to be reorganized.
+    /// @return None
+    /// @note This function is called after a task is removed to ensure that the IDs are sequential.
+    void reorganizeIds(vector<Task>& tasks);
 };
 
 /// @brief Class to manage the program flow and user interactions.
@@ -103,6 +112,13 @@ public:
     /// @param tasks A reference to the vector of tasks to be displayed.
     /// @todo Add an option to filter tasks by priority or category.
     void viewTasks(const vector<Task>& tasks);
+
+    /// @brief Marks a task as completed.
+    /// @details This function prompts the user for the task ID to mark as completed and updates the task status.
+    /// @param tasks A reference to the vector of tasks where the task will be marked as completed.
+    /// @todo Add input validation for task ID.
+    /// @todo Add confirmation before marking a task as completed.
+    void completeTask(vector<Task>& tasks);
 };
 
 /// @brief Main function to run the program.
@@ -118,7 +134,7 @@ int main()
     int menuChoice = 0;
     int nextId = 1;
 
-    while (menuChoice != 4) 
+    while (menuChoice != 5) 
     {
         ProgramFlow programFlow;
         programFlow.displayMenu();
@@ -150,6 +166,11 @@ int main()
             }
             case 4:
             {
+                programFlow.completeTask(tasks);
+                break;
+            }
+            case 5:
+            {
                 cout << "Exit selected....Goodbye" << endl;
                 break;
             }
@@ -164,13 +185,28 @@ int main()
     return 0;
 }
 
+void Task::display() const 
+{
+    string status = completed ? "[✓]" : "[ ]"; // Display completed status
+    cout << id << ".) " << status << " - " << description << endl;
+}
+
+void Task::reorganizeIds(vector<Task>& tasks) 
+{
+    for (size_t i = 0; i < tasks.size(); ++i) 
+    {
+        tasks[i].id = i + 1; // Reorganize IDs to be sequential
+    }
+}
+
 void ProgramFlow::displayMenu() 
 {
     cout << "\nTo-do list" << endl;
     cout << "1. Add task" << endl;
     cout << "2. Remove task" << endl;
     cout << "3. View tasks" << endl;
-    cout << "4. Exit" << endl;
+    cout << "4. Mark task as completed" << endl;
+    cout << "5. Exit" << endl;
     cout << "Choose an option: ";
 }
 
@@ -260,6 +296,9 @@ void ProgramFlow::removeTask(vector<Task>& tasks)
     {
         cout << "Task ID not found." << endl;
     }
+
+    // Reorganize IDs after removal
+    tasks[0].reorganizeIds(tasks);
 }
 
 void ProgramFlow::viewTasks(const vector<Task>& tasks) 
@@ -275,6 +314,43 @@ void ProgramFlow::viewTasks(const vector<Task>& tasks)
         {
             task.display();
         }
+    }
+}
+
+void ProgramFlow::completeTask(vector<Task>& tasks) 
+{
+    if (tasks.empty()) 
+    {
+        cout << "No tasks to mark as completed." << endl;
+        return;
+    }
+
+    int idToComplete;
+    cout << "Enter task ID to mark as completed: ";
+    if (!(cin >> idToComplete)) 
+    {
+        cin.clear(); // Clear the error flag
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+        cout << "Invalid input. Please enter a number." << endl;
+        return; // Exit the function if input is invalid
+    }
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the newline character from the input buffer
+
+    bool found = false;
+    for (auto& task : tasks) 
+    {
+        if (task.id == idToComplete) 
+        {
+            task.completed = true; // Mark the task as complete
+            cout << "Task marked as completed!" << endl;
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) 
+    {
+        cout << "Task ID not found." << endl;
     }
 }
 
