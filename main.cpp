@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <limits>
+#include <fstream>
 
 using namespace std;
 
@@ -11,8 +12,6 @@ using namespace std;
 /// @note The program uses a vector to store tasks and allows users to add, remove, and view them.
 /// @exception None
 
-/// @todo [High Priority] Add a feature to mark tasks as completed.
-/// @todo [High Priority] reorganize the ids of the tasks after removing a task. 
 /// @todo [High Priority] Implement file I/O to save and load tasks from a file.
 /// @todo [Medium Priority] Add a feature to edit existing tasks.
 /// @todo [Medium Priority] Implement a feature to set task priorities (high, medium, low).
@@ -78,7 +77,22 @@ public:
     /// @param tasks A reference to the vector of tasks to be reorganized.
     /// @return None
     /// @note This function is called after a task is removed to ensure that the IDs are sequential.
-    void reorganizeIds(vector<Task>& tasks);
+    static void reorganizeIds(vector<Task>& tasks);
+
+    /// @brief Saves the tasks to a file.
+    /// @details This function writes the task details to a file for persistence.
+    /// @param tasks 
+    /// @return None
+    /// @note This function is called when the program exits to save the tasks.
+    static void saveTasks(const vector<Task>& tasks);
+
+    /// @brief Loads the tasks from a file.
+    /// @details This function reads the task details from a file to restore the tasks.
+    /// @param tasks A reference to the vector of tasks to be loaded.
+    /// @param nextId A reference to the next available task ID.
+    /// @return None
+    /// @note This function is called when the program starts to load the tasks.
+    static void loadTasks(vector<Task>& tasks, int& nextId);
 };
 
 /// @brief Class to manage the program flow and user interactions.
@@ -134,6 +148,9 @@ int main()
     int menuChoice = 0;
     int nextId = 1;
 
+    // Load tasks from file
+    Task::loadTasks(tasks, nextId);
+
     while (menuChoice != 5) 
     {
         ProgramFlow programFlow;
@@ -172,6 +189,7 @@ int main()
             case 5:
             {
                 cout << "Exit selected....Goodbye" << endl;
+                Task::saveTasks(tasks); // Save tasks to file before exiting
                 break;
             }
             default:
@@ -185,10 +203,12 @@ int main()
     return 0;
 }
 
+/// Function Definitions
+
 void Task::display() const 
 {
     string status = completed ? "[✓]" : "[ ]"; // Display completed status
-    cout << id << ".) " << status << " - " << description << endl;
+    cout << id << ".) " << status << " " << name << " - " << description << endl;
 }
 
 void Task::reorganizeIds(vector<Task>& tasks) 
@@ -196,6 +216,56 @@ void Task::reorganizeIds(vector<Task>& tasks)
     for (size_t i = 0; i < tasks.size(); ++i) 
     {
         tasks[i].id = i + 1; // Reorganize IDs to be sequential
+    }
+}
+
+void Task::saveTasks(const vector<Task>& tasks) 
+{
+    ofstream outFile("tasks.txt");
+    if (outFile.is_open()) 
+    {
+        for (const auto& task : tasks) 
+        {
+            outFile << task.id << "," << task.name << "," << task.description << "," << task.completed << endl;
+        }
+        outFile.close();
+    } 
+    else 
+    {
+        cout << "Unable to open file for saving tasks." << endl;
+    }
+}
+
+void Task::loadTasks(vector<Task>& tasks, int& nextId) 
+{
+    ifstream inFile("tasks.txt");
+    if (inFile.is_open()) 
+    {
+        string line;
+        while (getline(inFile, line)) 
+        {
+            size_t pos = 0;
+            vector<string> taskData;
+            while ((pos = line.find(",")) != string::npos) 
+            {
+                taskData.push_back(line.substr(0, pos));
+                line.erase(0, pos + 1);
+            }
+            taskData.push_back(line); // Add the last part
+
+            if (taskData.size() == 4) 
+            {
+                Task task(stoi(taskData[0]), taskData[1], taskData[2]);
+                task.completed = (taskData[3] == "1");
+                tasks.push_back(task);
+                nextId = max(nextId, task.id + 1); // Update nextId
+            }
+        }
+        inFile.close();
+    } 
+    else 
+    {
+        cout << "Unable to open file for loading tasks." << endl;
     }
 }
 
@@ -298,7 +368,11 @@ void ProgramFlow::removeTask(vector<Task>& tasks)
     }
 
     // Reorganize IDs after removal
-    tasks[0].reorganizeIds(tasks);
+    if (!tasks.empty()) 
+    {
+        
+        Task::reorganizeIds(tasks);
+    }
 }
 
 void ProgramFlow::viewTasks(const vector<Task>& tasks) 
