@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <limits>
 
 using namespace std;
 
@@ -11,7 +12,6 @@ using namespace std;
 /// @warning This program does not include error handling for invalid user input.
 /// @exception None
 
-/// @todo [High Priority] Implement error handling for invalid user input.
 /// @todo [High Priority] Add a feature to mark tasks as completed.
 /// @todo [High Priority] Implement file I/O to save and load tasks from a file.
 /// @todo [Medium Priority] Add a feature to edit existing tasks.
@@ -122,7 +122,14 @@ int main()
     {
         ProgramFlow programFlow;
         programFlow.displayMenu();
-        cin >> menuChoice;
+        if (!(cin >> menuChoice)) 
+        {
+            cin.clear(); // Clear the error flag
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+            cout << "Invalid input. Please enter a number." << endl;
+            continue; // Skip to the next iteration of the loop
+        }
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the newline character from the input buffer
 
         switch (menuChoice) 
         {
@@ -169,14 +176,49 @@ void ProgramFlow::displayMenu()
 
 void ProgramFlow::addTask(vector<Task>& tasks, int& nextId) 
 {
-    cin.ignore(); // Clear newline
     string taskName, taskDescription;
 
     cout << "Task Name: ";
     getline(cin, taskName);
 
+    if (taskName.empty()) 
+    {
+        cout << "Task name cannot be empty." << endl;
+        return;
+    }
+
+    if (taskName.length() > 50) 
+    {
+        cout << "Task name is too long. Maximum length is 50 characters." << endl;
+        return;
+    }
+
+    if (taskName.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ") != string::npos) 
+    {
+        cout << "Task name can only contain letters, numbers, and spaces." << endl;
+        return;
+    }
+
     cout << "Task Description: ";
     getline(cin, taskDescription);
+
+    if (taskDescription.empty()) 
+    {
+        cout << "Task description cannot be empty." << endl;
+        return;
+    }
+
+    if (taskDescription.length() > 100) 
+    {
+        cout << "Task description is too long. Maximum length is 100 characters." << endl;
+        return;
+    }
+
+    if (taskDescription.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ") != string::npos) 
+    {
+        cout << "Task description can only contain letters, numbers, and spaces." << endl;
+        return;
+    }
 
     tasks.push_back(Task(nextId, taskName, taskDescription));
     cout << "Task added successfully!" << endl;
@@ -193,7 +235,14 @@ void ProgramFlow::removeTask(vector<Task>& tasks)
 
     int idToRemove;
     cout << "Enter task ID to remove: ";
-    cin >> idToRemove;
+    if (!(cin >> idToRemove)) 
+    {
+        cin.clear(); // Clear the error flag
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+        cout << "Invalid input. Please enter a number." << endl;
+        return; // Exit the function if input is invalid
+    }
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the newline character from the input buffer
 
     bool found = false;
     for (auto it = tasks.begin(); it != tasks.end(); ++it) 
