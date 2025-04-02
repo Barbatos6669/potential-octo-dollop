@@ -1,5 +1,11 @@
 # Release: v0.2.1-alpha - April 1, 2025
 
+This update includes the ability to store a due date
+
+---
+
+# Release: v0.2.1-alpha - April 1, 2025
+
 This update includes the latest improvements and bug fixes for the task manager CLI app.
 
 ---

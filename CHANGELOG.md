@@ -14,7 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [v0.2.1-alpha] - 2025-04-01
 
-### Added
+## Added
+- documented trimUserInput()
+- Added an entry for due date in add task function
+- Added a due date category to save and load
 - Improved task filtering: filter tasks by completion status directly from the menu ✨
 - Enhanced menu navigation for better usability ✨
 

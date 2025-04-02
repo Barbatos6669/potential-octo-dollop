@@ -13,8 +13,6 @@ using namespace std;
 /// @note The program uses a vector to store tasks and allows users to add, remove, and view them.
 /// @exception None
 
-
-/// @todo [Medium Priority] Add a feature to edit existing tasks.
 /// @todo [Medium Priority] Implement a feature to set task priorities (high, medium, low).
 /// @todo [Medium Priority] Add a feature to sort tasks based on priority or due date.
 /// @todo [Medium Priority] Implement a feature to set due dates for tasks.
@@ -49,24 +47,20 @@ public:
     int id; ///< The unique ID of the task.
     string name; ///< The name of the task.
     string description; ///< A brief description of the task.
+    string dueDate; ///< The due date of the task (e.g, "2025-04-01").
 
-    bool completed = false; ///< Indicates whether the task is completed.
+    bool completed = false; ///< Indicates whether the task is completed.   
 
-    
     /// @brief Constructor for the Task class.
     /// @details Initializes a task with an ID, name, and description.
     /// @param i The unique ID of the task.
     /// @param n The name of the task.
     /// @param d The description of the task.
+    /// @param date The due date of the task (optional).
     /// @return None
     /// @note The completed status is set to false by default.
-    Task(int i, string n, string d) 
-    {
-        id = i;
-        name = n;
-        description = d;
-        completed = false; // Default to not completed
-    }
+    Task(int i, string n, string d, string date = "") :
+        id(i), name(n), description(d), dueDate(date) , completed(false) {}
 
     /// @brief Displays the task details.
     /// @details Prints the task ID, name, and description to the console.
@@ -194,11 +188,20 @@ public:
 
 class UserInput 
 {
-public:
-    
+public:    
+    /// @brief Converts user input to lowercase.
+    /// @details This function takes a string and converts all characters to lowercase.
+    /// @param str 
+    /// @return The lowercase version of the input string.
+    /// @note This function is used to standardize user input for comparison.
     string convertUserInputLowercase(const string& str);
-    string trimUserInput(const string& str);
 
+    /// @brief Trims leading and trailing whitespace from user input.
+    /// @details This function takes a string and removes any leading or trailing whitespace characters.
+    /// @param str 
+    /// @return The trimmed version of the input string.
+    /// @note This function is used to clean up user input before processing.
+    string trimUserInput(const string& str);
 };
 
 /// @brief Main function to run the program.
@@ -279,12 +282,21 @@ int main()
     return 0;
 }
 
-/// Function Definitions
-
 void Task::display() const 
 {
     string status = completed ? "[✓]" : "[ ]"; // Display completed status
-    cout << id << ".) " << status << " " << name << " - " << description << endl;
+    cout << id << ".) " << status << " " << name << " - " << description;
+
+
+    if (!dueDate.empty()) // Display due date if set
+    {
+        cout << " - Due Date: " << dueDate << endl; // Display due date if set
+    }
+
+    else 
+    {
+        cout << endl; // Print a new line if no due date is set
+    }
 }
 
 void Task::reorganizeIds(vector<Task>& tasks) 
@@ -302,7 +314,7 @@ void Task::saveTasks(const vector<Task>& tasks)
     {
         for (const auto& task : tasks) 
         {
-            outFile << task.id << "," << task.name << "," << task.description << "," << task.completed << endl;
+            outFile << task.id << "," << task.name << "," << task.description << "," << task.completed << "," << task.dueDate << endl;
         }
         outFile.close();
     } 
@@ -329,12 +341,49 @@ void Task::loadTasks(vector<Task>& tasks, int& nextId)
             }
             taskData.push_back(line); // Add the last part
 
-            if (taskData.size() == 4) 
+            if (taskData.size() == 5) // Check if all fields are present
             {
-                Task task(stoi(taskData[0]), taskData[1], taskData[2]);
-                task.completed = (taskData[3] == "1");
+                Task task(stoi(taskData[0]), taskData[1], taskData[2], taskData[4]);
+                task.completed = (taskData[3] == "1"); // Convert string to bool
                 tasks.push_back(task);
                 nextId = max(nextId, task.id + 1); // Update nextId
+            } 
+            else if (taskData.size() == 4) // Handle tasks without due date
+            {
+                Task task(stoi(taskData[0]), taskData[1], taskData[2]);
+                task.completed = (taskData[3] == "1"); // Convert string to bool
+                tasks.push_back(task);
+                nextId = max(nextId, task.id + 1); // Update nextId
+            } 
+            else if (taskData.size() == 3) // Handle tasks without due date and completed status
+            {
+                Task task(stoi(taskData[0]), taskData[1], taskData[2]);
+                task.completed = false; // Default to not completed
+                tasks.push_back(task);
+                nextId = max(nextId, task.id + 1); // Update nextId
+            } 
+            else if (taskData.size() == 2) // Handle tasks without due date, completed status, and description
+            {
+                Task task(stoi(taskData[0]), taskData[1], ""); // Empty description
+                task.completed = false; // Default to not completed
+                tasks.push_back(task);
+                nextId = max(nextId, task.id + 1); // Update nextId
+            } 
+            else if (taskData.size() == 1) // Handle tasks with only ID and name
+            {
+                Task task(stoi(taskData[0]), taskData[1], ""); // Empty description
+                task.completed = false; // Default to not completed
+                tasks.push_back(task);
+                nextId = max(nextId, task.id + 1); // Update nextId
+            } 
+            else if (taskData.size() == 0) // Handle empty lines
+            {
+                continue; // Skip empty lines
+            } 
+            else // Handle invalid lines
+            {
+                cout << "Invalid task format in file. Skipping line." << endl;
+                continue; // Skip invalid lines
             }
         }
         inFile.close();
@@ -363,7 +412,7 @@ void ProgramFlow::displayMenu()
 
 void ProgramFlow::addTask(vector<Task>& tasks, int& nextId) 
 {
-    string taskName, taskDescription;
+    string taskName, taskDescription, taskDueDate;
 
     cout << "Task Name: ";
     getline(cin, taskName);
@@ -407,9 +456,74 @@ void ProgramFlow::addTask(vector<Task>& tasks, int& nextId)
         return;
     }
 
-    tasks.push_back(Task(nextId, taskName, taskDescription));
+    cout << "Due Date (YYYY-MM-DD): ";
+    getline(cin, taskDueDate);
+
+    if (!taskDueDate.empty()) 
+    {
+        // Validate due date format (YYYY-MM-DD)
+        if (taskDueDate.length() != 10 || taskDueDate[4] != '-' || taskDueDate[7] != '-') 
+        {
+            cout << "Invalid due date format. Please use YYYY-MM-DD." << endl;
+            return;
+        }
+
+        // Check if the date is valid (basic validation)
+        int year = stoi(taskDueDate.substr(0, 4)); // Extract year
+        int month = stoi(taskDueDate.substr(5, 2)); // Extract month
+        int day = stoi(taskDueDate.substr(8, 2)); // Extract day
+
+        if (month < 1 || month > 12 || day < 1 || day > 31) 
+        {
+            cout << "Invalid date. Please enter a valid date." << endl;
+            return;
+        }
+        if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30) 
+        {
+            cout << "Invalid date. The month you entered has only 30 days." << endl;
+            return;
+        }
+        if (month == 2) 
+        {
+            if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) // Leap year check
+            {
+                if (day > 29) 
+                {
+                    cout << "Invalid date. February has only 29 days in a leap year." << endl;
+                    return;
+                }
+            } 
+            else 
+            {
+                if (day > 28) 
+                {
+                    cout << "Invalid date. February has only 28 days in a non-leap year." << endl;
+                    return;
+                }
+            }
+        }
+
+        // If the date is valid, set it to the task
+        taskDueDate = taskDueDate; // Set the due date to the task
+    }
+
+
+    // Check if the task name already exists
+    for (const auto& task : tasks) 
+    {
+        if (task.name == taskName) 
+        {
+            cout << "Task with this name already exists." << endl;
+            return;
+        }
+    }
+
+    tasks.push_back(Task(nextId, taskName, taskDescription, taskDueDate)); // Add the new task to the list
     cout << "Task added successfully!" << endl;
     nextId++;
+
+    Task::saveTasks(tasks); // Save tasks to file after adding
+    cout << "Tasks saved to file." << endl;
 }
 
 void ProgramFlow::removeTask(vector<Task>& tasks) 
@@ -596,9 +710,6 @@ void ProgramFlow::categorizeTasks(vector<Task>& tasks)
 
 void ProgramFlow::searchTasks(vector<Task>& tasks) 
 {
-    // Future feature to search tasks
-    cout << "Search tasks feature is not implemented yet." << endl;
-
     if (tasks.empty()) 
     {
         cout << "No tasks to search." << endl;
