@@ -1,6 +1,9 @@
-# Release: v0.2.1-alpha - April 1, 2025
+# Release: v0.2.3-alpha - April 2, 2025
+---
 
-This update includes the ability to store a due date
+# Release: v0.2.2-alpha - April 1, 2025
+
+This update includes the ability to store a due date and some easier option flow
 
 ---
 

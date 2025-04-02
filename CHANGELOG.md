@@ -12,6 +12,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v0.2.3-alpha] - 2025-04-02
+## Added
+- undo task
+- displays how many days left a task 
+- restructured some code
+## Notes
+- Menu navigation is more intuitive with clearer options.
+
+---
+
 ## [v0.2.1-alpha] - 2025-04-01
 
 ## Added
