@@ -1,5 +1,4 @@
-# relase: v0.2.3-alpha - April 2, 2025
-
+# Release: v0.2.3-alpha - April 2, 2025
 ---
 
 # Release: v0.2.2-alpha - April 1, 2025
