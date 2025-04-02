@@ -3,7 +3,11 @@
 #include <string>
 #include <limits>
 #include <fstream>
+#include <sstream>
+#include <iomanip>
 #include <array>
+#include <chrono>
+#include <ctime>
 
 using namespace std;
 
@@ -48,6 +52,12 @@ public:
     string name; ///< The name of the task.
     string description; ///< A brief description of the task.
     string dueDate; ///< The due date of the task (e.g, "2025-04-01").
+    int daysLeft; ///< The number of days left until the due date.
+    string priority; ///< The priority of the task (e.g., "high", "medium", "low").
+    string category; ///< The category of the task (e.g., "work", "personal").
+    string status; ///< The status of the task (e.g., "completed", "incomplete").
+    string createdDate; ///< The date when the task was created.
+    string createdTime; ///< The time when the task was created.
 
     bool completed = false; ///< Indicates whether the task is completed.   
 
@@ -59,8 +69,8 @@ public:
     /// @param date The due date of the task (optional).
     /// @return None
     /// @note The completed status is set to false by default.
-    Task(int i, string n, string d, string date = "") :
-        id(i), name(n), description(d), dueDate(date) , completed(false) {}
+    Task(int i, string n, string d, string date = "", string p = "", string c = "", int daysLeft = 0)
+        : id(i), name(n), description(d), dueDate(date), priority(p), category(c), completed(false), daysLeft(daysLeft) {}
 
     /// @brief Displays the task details.
     /// @details Prints the task ID, name, and description to the console.
@@ -130,6 +140,12 @@ public:
     /// @todo Add confirmation before marking a task as completed.
     void completeTask(vector<Task>& tasks);
 
+    /// @brief Future feature to undo the last task action.
+    /// @details This function will allow the user to undo the last action performed on the task list.
+    /// @param tasks A reference to the vector of tasks where the last action will be undone.
+    /// @todo Implement the undo task feature.
+    void undoTask(vector<Task>& tasks);
+
     /// @brief Future feature to edit a task.
     /// @details This function will allow the user to edit the details of an existing task.
     /// @param tasks 
@@ -183,7 +199,13 @@ public:
     /// @details This function will allow the user to customize the user interface (themes, colors, etc.).
     /// @param tasks
     /// @todo Implement the customize UI feature.
-    void customizeUI(vector<Task>& tasks); // Future feature to customize UI    
+    void customizeUI(vector<Task>& tasks); // Future feature to customize UI   
+    
+    /// @brief Future feature to return the days left until the due date.
+    /// @details This function will return the number of days left until the due date of a task.
+    /// @param tasks
+    /// @todo Implement the days left feature.
+    void daysLeft(vector<Task>& tasks); // Future feature to return the days left until the due date
 };
 
 class UserInput 
@@ -202,6 +224,37 @@ public:
     /// @return The trimmed version of the input string.
     /// @note This function is used to clean up user input before processing.
     string trimUserInput(const string& str);
+};
+
+class Time
+{
+public:
+    int year; ///< The year of the date.
+    int month; ///< The month of the date.
+    int day; ///< The day of the date.
+
+    int hour; ///< The hour of the time.
+    int minute; ///< The minute of the time.
+    int second; ///< The second of the time.
+
+    /// @brief Gets the current date and time.
+    /// @details This function returns the current date and time as a string.
+    /// @return The current date and time in the format "YYYY-MM-DD HH:MM:SS".
+    /// @note This function is used to display the current date and time.
+    string getCurrentDateTime(); 
+
+    /// @brief Gets the current date.
+    /// @details This function returns the current date as a string.
+    /// @param None
+    /// @return The current date in the format "YYYY-MM-DD".
+    /// @note This function is used to display the current date.
+    string getCurrentDate(); ///< The current date in the format "YYYY-MM-DD".
+
+    /// @brief Gets the current time.
+    /// @details This function returns the current time as a string.
+    /// @return The current time in the format "HH:MM:SS".
+    /// @note This function is used to display the current time.
+    string getCurrentTime(); ///< The current time in the format "HH:MM:SS".
 };
 
 /// @brief Main function to run the program.
@@ -223,7 +276,8 @@ int main()
     while (menuChoice != 7) 
     {
         ProgramFlow programFlow;
-        programFlow.displayMenu();
+        programFlow.viewTasks(tasks); // Display the current tasks
+        programFlow.displayMenu(); // Display the menu options
         if (!(cin >> menuChoice)) 
         {
             cin.clear(); // Clear the error flag
@@ -244,15 +298,15 @@ int main()
             {
                 programFlow.removeTask(tasks);
                 break;
-            }
-            case 3: 
+            }            
+            case 3:
             {
-                programFlow.viewTasks(tasks);
+                programFlow.completeTask(tasks);
                 break;
             }
             case 4:
             {
-                programFlow.completeTask(tasks);
+                programFlow.undoTask(tasks); // Future feature to undo tasks
                 break;
             }
             case 5:
@@ -285,17 +339,29 @@ int main()
 void Task::display() const 
 {
     string status = completed ? "[✓]" : "[ ]"; // Display completed status
+    int daysLeft = this->daysLeft; // Get the number of days left until the due date
     cout << id << ".) " << status << " " << name << " - " << description;
-
 
     if (!dueDate.empty()) // Display due date if set
     {
-        cout << " - Due Date: " << dueDate << endl; // Display due date if set
+        cout << " - Due Date: " << dueDate; // Display due date if set
     }
-
     else 
     {
-        cout << endl; // Print a new line if no due date is set
+        cout << " - No due date set"; // Display no due date status
+    } 
+
+    if (daysLeft > 0) // Display days left if positive
+    {
+        cout << " - Days left: " << daysLeft << endl; // Display days left until due date
+    } 
+    else if (daysLeft < 0) // Display overdue status if negative
+    {
+        cout << " - Overdue by: " << abs(daysLeft) << " days" << endl; // Display overdue status
+    } 
+    else 
+    {
+        cout << "- Due today!" << endl; // Display due today status
     }
 }
 
@@ -314,7 +380,7 @@ void Task::saveTasks(const vector<Task>& tasks)
     {
         for (const auto& task : tasks) 
         {
-            outFile << task.id << "," << task.name << "," << task.description << "," << task.completed << "," << task.dueDate << endl;
+            outFile << task.id << "," << task.name << "," << task.description << "," << task.completed << "," << task.dueDate << ", " << task.daysLeft << endl;
         }
         outFile.close();
     } 
@@ -341,7 +407,14 @@ void Task::loadTasks(vector<Task>& tasks, int& nextId)
             }
             taskData.push_back(line); // Add the last part
 
-            if (taskData.size() == 5) // Check if all fields are present
+            if (taskData.size() == 6) // Check if all fields are present
+            {
+                Task task(stoi(taskData[0]), taskData[1], taskData[2], taskData[4], taskData[5]);
+                task.completed = (taskData[3] == "1"); // Convert string to bool
+                tasks.push_back(task);
+                nextId = max(nextId, task.id + 1); // Update nextId
+            }
+            else if (taskData.size() == 5) // Check if all fields are present
             {
                 Task task(stoi(taskData[0]), taskData[1], taskData[2], taskData[4]);
                 task.completed = (taskData[3] == "1"); // Convert string to bool
@@ -398,9 +471,9 @@ void ProgramFlow::displayMenu()
 {
     cout << "\nTo-do list" << endl;
     cout << "1. Add task" << endl;
-    cout << "2. Remove task" << endl;
-    cout << "3. View tasks" << endl;
-    cout << "4. Mark task as completed" << endl;
+    cout << "2. Remove task" << endl;    
+    cout << "3. Mark task as completed" << endl;
+    cout << "4. Undo task" << endl; // Future feature to undo tasks
     cout << "5. Edit task" << endl; // Future feature to edit tasks
     cout << "6. Search tasks" << endl; // Future feature to search tasks
     // cout << "6. Set task priority" << endl; // Future feature to set task priorities
@@ -412,7 +485,8 @@ void ProgramFlow::displayMenu()
 
 void ProgramFlow::addTask(vector<Task>& tasks, int& nextId) 
 {
-    string taskName, taskDescription, taskDueDate;
+    string taskName, taskDescription, taskDueDate; // Initialize taskDaysLeft to 0
+    cout << "Add a new task" << endl;
 
     cout << "Task Name: ";
     getline(cin, taskName);
@@ -505,8 +579,32 @@ void ProgramFlow::addTask(vector<Task>& tasks, int& nextId)
 
         // If the date is valid, set it to the task
         taskDueDate = taskDueDate; // Set the due date to the task
+        
     }
 
+    int daysLeft;
+    // Calculate days left until the due date
+    
+    if (!taskDueDate.empty()) 
+    {
+        // Calculate days left until the due date
+        Time time;
+        string currentDate = time.getCurrentDate(); // Get the current date
+        int currentYear = stoi(currentDate.substr(0, 4)); // Extract current year
+        int currentMonth = stoi(currentDate.substr(5, 2)); // Extract current month
+        int currentDay = stoi(currentDate.substr(8, 2)); // Extract current day
+
+        int dueYear = stoi(taskDueDate.substr(0, 4)); // Extract due year
+        int dueMonth = stoi(taskDueDate.substr(5, 2)); // Extract due month
+        int dueDay = stoi(taskDueDate.substr(8, 2)); // Extract due day
+
+        // Calculate days left until the due date (basic calculation)
+        daysLeft = (dueYear - currentYear) * 365 + (dueMonth - currentMonth) * 30 + (dueDay - currentDay); // Basic calculation of days left
+    }
+    else 
+    {
+        taskDueDate = ""; // Set due date to empty if not provided
+    }
 
     // Check if the task name already exists
     for (const auto& task : tasks) 
@@ -518,7 +616,7 @@ void ProgramFlow::addTask(vector<Task>& tasks, int& nextId)
         }
     }
 
-    tasks.push_back(Task(nextId, taskName, taskDescription, taskDueDate)); // Add the new task to the list
+    tasks.push_back(Task(nextId, taskName, taskDescription, taskDueDate, "", "", daysLeft)); // Add the new task to the list
     cout << "Task added successfully!" << endl;
     nextId++;
 
@@ -568,6 +666,12 @@ void ProgramFlow::removeTask(vector<Task>& tasks)
         
         Task::reorganizeIds(tasks);
     }
+
+    // Save tasks to file after removal
+    Task::saveTasks(tasks); // Save tasks to file after removing
+    cout << "Tasks saved to file." << endl;
+
+    viewTasks(tasks); // Display tasks after removal
 }
 
 void ProgramFlow::viewTasks(const vector<Task>& tasks) 
@@ -621,6 +725,51 @@ void ProgramFlow::completeTask(vector<Task>& tasks)
     {
         cout << "Task ID not found." << endl;
     }
+    
+    Task::saveTasks(tasks); // Save tasks to file after marking as completed
+}
+
+void ProgramFlow::undoTask(vector<Task>& tasks) 
+{
+    // Future feature to undo the last task action
+    cout << "Undo task feature is not implemented yet." << endl;
+
+    if (tasks.empty()) 
+    {
+        cout << "No tasks to undo." << endl;
+        return; // Exit the function if there are no tasks
+    }
+
+    int idToUndo;
+    cout << "Enter task ID to undo: ";
+    if (!(cin >> idToUndo)) // Check if input is valid
+    {
+        cin.clear(); // Clear the error flag
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+        cout << "Invalid input. Please enter a number." << endl;
+        return; // Exit the function if input is invalid
+    }
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the newline character from the input buffer
+
+    bool found = false;
+    for (auto& task : tasks) 
+    {
+        if (task.id == idToUndo) 
+        {
+            task.completed = false; // Mark the task as incomplete
+            cout << "Task marked as incomplete!" << endl;
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) 
+    {
+        cout << "Task ID not found." << endl;
+    }
+
+    Task::saveTasks(tasks); 
+    cout << "Tasks saved to file." << endl;
 }
 
 void ProgramFlow::editTask(vector<Task>& tasks) 
@@ -783,6 +932,12 @@ void ProgramFlow::customizeUI(vector<Task>& tasks)
     cout << "Customize UI feature is not implemented yet." << endl;
 }
 
+void ProgramFlow::daysLeft(vector<Task>& tasks) 
+{
+    // Future feature to return the days left until the due date
+    cout << "Days left feature is not implemented yet." << endl;
+}
+
 string UserInput::convertUserInputLowercase(const string& str) 
 {
     string lowerStr = str;
@@ -798,6 +953,36 @@ string UserInput::trimUserInput(const string& str)
     size_t first = str.find_first_not_of(' '); // Find the first non-space character
     size_t last = str.find_last_not_of(' '); // Find the last non-space character
     return (first == string::npos) ? "" : str.substr(first, (last - first + 1)); // Return the trimmed string
+}
+
+string Time::getCurrentDateTime() 
+{
+    auto now = chrono::system_clock::now(); // Get the current time
+    auto in_time_t = chrono::system_clock::to_time_t(now); // Convert to time_t
+
+    stringstream ss;
+    ss << put_time(localtime(&in_time_t), "%Y-%m-%d %X"); // Format the time
+    return ss.str(); // Return the formatted time as a string
+}
+
+string Time::getCurrentDate() 
+{
+    auto now = chrono::system_clock::now(); // Get the current time
+    auto in_time_t = chrono::system_clock::to_time_t(now); // Convert to time_t
+
+    stringstream ss;
+    ss << put_time(localtime(&in_time_t), "%Y-%m-%d"); // Format the date
+    return ss.str(); // Return the formatted date as a string
+}
+
+string Time::getCurrentTime() 
+{
+    auto now = chrono::system_clock::now(); // Get the current time
+    auto in_time_t = chrono::system_clock::to_time_t(now); // Convert to time_t
+
+    stringstream ss;
+    ss << put_time(localtime(&in_time_t), "%X"); // Format the time
+    return ss.str(); // Return the formatted time as a string
 }
 
 
