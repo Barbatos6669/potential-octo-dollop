@@ -3,6 +3,7 @@
 #include <string>
 #include <limits>
 #include <fstream>
+#include <array>
 
 using namespace std;
 
@@ -51,6 +52,7 @@ public:
 
     bool completed = false; ///< Indicates whether the task is completed.
 
+    
     /// @brief Constructor for the Task class.
     /// @details Initializes a task with an ID, name, and description.
     /// @param i The unique ID of the task.
@@ -190,6 +192,15 @@ public:
     void customizeUI(vector<Task>& tasks); // Future feature to customize UI    
 };
 
+class UserInput 
+{
+public:
+    
+    string convertUserInputLowercase(const string& str);
+    string trimUserInput(const string& str);
+
+};
+
 /// @brief Main function to run the program.
 /// @details This function initializes the program and handles user input for the menu options.
 /// @return 0 on success.
@@ -206,7 +217,7 @@ int main()
     // Load tasks from file
     Task::loadTasks(tasks, nextId);
 
-    while (menuChoice != 6) 
+    while (menuChoice != 7) 
     {
         ProgramFlow programFlow;
         programFlow.displayMenu();
@@ -247,6 +258,11 @@ int main()
                 break;
             }
             case 6:
+            {
+                programFlow.searchTasks(tasks); // Future feature to search tasks
+                break;
+            }
+            case 7:
             {
                 Task::saveTasks(tasks); // Save tasks to file before exiting
                 cout << "Exiting program. Tasks saved to file." << endl;
@@ -337,10 +353,11 @@ void ProgramFlow::displayMenu()
     cout << "3. View tasks" << endl;
     cout << "4. Mark task as completed" << endl;
     cout << "5. Edit task" << endl; // Future feature to edit tasks
+    cout << "6. Search tasks" << endl; // Future feature to search tasks
     // cout << "6. Set task priority" << endl; // Future feature to set task priorities
     // cout << "7. Sort tasks" << endl; // Future feature to sort tasks
     // cout << "8. Set due date" << endl; // Future feature to set due dates    
-    cout << "6. Exit" << endl;
+    cout << "7. Exit" << endl;
     cout << "Choose an option: ";
 }
 
@@ -551,6 +568,12 @@ void ProgramFlow::setTaskPriority(vector<Task>& tasks)
 {
     // Future feature to set task priorities
     cout << "Set task priority feature is not implemented yet." << endl;
+
+    if (tasks.empty()) 
+    {
+        cout << "No tasks to set priority." << endl;
+        return; // Exit the function if there are no tasks
+    }
 }
 
 void ProgramFlow::sortTasks(vector<Task>& tasks) 
@@ -575,6 +598,60 @@ void ProgramFlow::searchTasks(vector<Task>& tasks)
 {
     // Future feature to search tasks
     cout << "Search tasks feature is not implemented yet." << endl;
+
+    if (tasks.empty()) 
+    {
+        cout << "No tasks to search." << endl;
+        return; // Exit the function if there are no tasks
+    }
+    
+    string searchTerm;
+    cout << "Enter search term: ";
+    
+    if (!(cin >> searchTerm)) // Check if input is valid
+    {
+        cin.clear(); // Clear the error flag
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+        cout << "Invalid input. Please enter a string." << endl;
+        return; // Exit the function if input is invalid
+    }
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the newline character from the input buffer
+
+    // Search for tasks containing the search term
+    cout << "Tasks containing '" << searchTerm << "':" << endl;
+    bool found = false;
+
+    searchTerm = UserInput().convertUserInputLowercase(searchTerm); // Convert search term to lowercase
+
+    for (auto& task : tasks) 
+    {
+        task.name = UserInput().convertUserInputLowercase(task.name); // Convert task name to lowercase
+        task.description = UserInput().convertUserInputLowercase(task.description); // Convert task description to lowercase
+    }
+
+    // Search for tasks containing the search term in name or description
+    for (const auto& task : tasks) 
+    {
+        if (task.name.find(searchTerm) != string::npos) 
+        {
+            task.display(); // Display tasks containing the search term
+            found = true;
+        }
+        else if (task.description.find(searchTerm) != string::npos) // Check if description contains the search term
+        {
+            task.display();
+            found = true;
+        }
+        else if (task.id == stoi(searchTerm)) // Check if ID matches the search term
+        {
+            task.display();
+            found = true;
+        }
+    }
+    if (!found)
+    {
+        cout << "No tasks found with the search term '" << searchTerm << "'." << endl;
+    }
 }
 
 void ProgramFlow::setReminders(vector<Task>& tasks) 
@@ -593,6 +670,23 @@ void ProgramFlow::customizeUI(vector<Task>& tasks)
 {
     // Future feature to customize UI
     cout << "Customize UI feature is not implemented yet." << endl;
+}
+
+string UserInput::convertUserInputLowercase(const string& str) 
+{
+    string lowerStr = str;
+    for (char& c : lowerStr) 
+    {
+        c = tolower(c); // Convert each character to lowercase
+    }
+    return lowerStr;
+}
+
+string UserInput::trimUserInput(const string& str) 
+{
+    size_t first = str.find_first_not_of(' '); // Find the first non-space character
+    size_t last = str.find_last_not_of(' '); // Find the last non-space character
+    return (first == string::npos) ? "" : str.substr(first, (last - first + 1)); // Return the trimmed string
 }
 
 
