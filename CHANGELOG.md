@@ -12,17 +12,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [v0.2.1-alpha] - 2025-04-01
+
+### Added
+- Improved task filtering: filter tasks by completion status directly from the menu ✨
+- Enhanced menu navigation for better usability ✨
+
+### Fixed
+- Task deletion bug: resolved incorrect task renumbering after deletion 🐛
+- UI glitch: fixed minor display issues when marking tasks as completed 🐛
+
+### Notes
+- Task filtering now supports completed and pending tasks.
+- Menu navigation is more intuitive with clearer options.
+
+---
+
+## [v0.2.0-alpha] - 2025-03-31
+
+### Added
+- File saving/loading (persistence): tasks are now saved to a file and loaded automatically on startup ✨
+- Task editing: added the ability to edit task descriptions ✨
+- Task priorities: tasks can now be assigned priorities (low, medium, high) ✨
+
+### Notes
+- This release introduced significant new features to improve task management.
+
+---
+
 ## [v0.1.2-alpha] - 2025-03-30
 
->>>>>>> fce1687 (feat: add task completion and ID reordering after task removal)
 ### Added
 - Feature to mark tasks as completed ✅
 - Automatic ID reordering after task deletion 🔁
 - Improved code organization (moved `main()` to top level)
 
 ### Notes
-- Completed tasks display a checkmark `[✓]`
-- Task IDs are now always sequential after a task is removed
+- Completed tasks display a checkmark `[✓]`.
+- Task IDs are now always sequential after a task is removed.
 
 ---
 
