@@ -206,7 +206,7 @@ int main()
     // Load tasks from file
     Task::loadTasks(tasks, nextId);
 
-    while (menuChoice != 5) 
+    while (menuChoice != 6) 
     {
         ProgramFlow programFlow;
         programFlow.displayMenu();
@@ -243,9 +243,14 @@ int main()
             }
             case 5:
             {
-                cout << "Exit selected....Goodbye" << endl;
-                Task::saveTasks(tasks); // Save tasks to file before exiting
+                programFlow.editTask(tasks); // Future feature to edit tasks
                 break;
+            }
+            case 6:
+            {
+                Task::saveTasks(tasks); // Save tasks to file before exiting
+                cout << "Exiting program. Tasks saved to file." << endl;
+                return 0; // Exit the program
             }
             default:
             {
@@ -331,7 +336,11 @@ void ProgramFlow::displayMenu()
     cout << "2. Remove task" << endl;
     cout << "3. View tasks" << endl;
     cout << "4. Mark task as completed" << endl;
-    cout << "5. Exit" << endl;
+    cout << "5. Edit task" << endl; // Future feature to edit tasks
+    // cout << "6. Set task priority" << endl; // Future feature to set task priorities
+    // cout << "7. Sort tasks" << endl; // Future feature to sort tasks
+    // cout << "8. Set due date" << endl; // Future feature to set due dates    
+    cout << "6. Exit" << endl;
     cout << "Choose an option: ";
 }
 
@@ -485,8 +494,57 @@ void ProgramFlow::completeTask(vector<Task>& tasks)
 
 void ProgramFlow::editTask(vector<Task>& tasks) 
 {
-    // Future feature to edit tasks
-    cout << "Edit task feature is not implemented yet." << endl;
+    if (tasks.empty()) 
+    {
+        cout << "No tasks to edit." << endl;
+        return; // Exit the function if there are no tasks
+    }
+
+    int idToEdit;
+    
+    cout << "Enter task ID to edit: ";
+
+    if (!(cin >> idToEdit)) // Check if input is valid
+    {
+        cin.clear(); // Clear the error flag
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+        cout << "Invalid input. Please enter a number." << endl;
+        return; // Exit the function if input is invalid
+    }
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the newline character from the input buffer
+
+    bool found = false;
+
+    for (auto& task : tasks) 
+    {
+        if (task.id == idToEdit) 
+        {
+            string newName, newDescription;
+            cout << "New Task Name: ";
+            getline(cin, newName);
+            cout << "New Task Description: ";
+            getline(cin, newDescription);
+
+            // Update task details
+            task.name = newName;
+            task.description = newDescription;
+            cout << "Task updated successfully!" << endl;
+            found = true;
+        }
+    }
+
+    if (!found) 
+    {
+        cout << "Task ID not found." << endl;
+    }
+    // Reorganize IDs after editing
+    if (!tasks.empty()) 
+    {
+        Task::reorganizeIds(tasks);
+    }
+    // Save tasks to file after editing
+    Task::saveTasks(tasks);
+    cout << "Tasks saved to file." << endl;
 }
 
 void ProgramFlow::setTaskPriority(vector<Task>& tasks) 
