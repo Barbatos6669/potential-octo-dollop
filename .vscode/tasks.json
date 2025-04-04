@@ -1,36 +1,40 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-      {
-        "type": "cppbuild",
-        "label": "Build with SFML",
-        "command": "C:\\mingw64\\bin\\g++.exe",
-        "args": [
-          "-fdiagnostics-color=always",
-          "-g",
-          "${file}",
-          "-o",
-          "${fileDirname}\\bin\\${fileBasenameNoExtension}.exe",
-          "-IC:/SFML-2.6.2/include",
-          "-LC:/SFML-2.6.2-Build/lib",
-          "-lsfml-graphics",
-          "-lsfml-window",
-          "-lsfml-system",
-          "-lsfml-audio",
-          "-lsfml-network"
-        ],
-        "options": {
-          "cwd": "${fileDirname}"
-        },
-        "problemMatcher": [
-          "$gcc"
-        ],
-        "group": {
-          "kind": "build",
-          "isDefault": true
-        },
-        "detail": "Build task using SFML and MinGW"
-      }
-    ]
-  }
-  
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "cppbuild",
+      "label": "Build with SFML",
+      "command": "C:\\mingw64\\bin\\g++.exe",
+      "args": [
+        "-fdiagnostics-color=always",
+        "-g",
+        "src/main.cpp",
+        "src/Task.cpp",
+        "src/ProgramFlow.cpp",
+        "src/UserInput.cpp",
+        "src/Time.cpp",
+        "-o",
+        "${workspaceFolder}/bin/main.exe",
+        "-Iinclude",
+        "-IC:/SFML-2.6.2/include",
+        "-LC:/SFML-2.6.2-Build/lib",
+        "-lsfml-graphics",
+        "-lsfml-window",
+        "-lsfml-system",
+        "-lsfml-audio",
+        "-lsfml-network"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "detail": "Build task using SFML and MinGW"
+    }
+  ]
+}

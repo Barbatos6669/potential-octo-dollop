@@ -52,6 +52,7 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "variant": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "sstream": "cpp"
     }
 }

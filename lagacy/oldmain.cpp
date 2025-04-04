@@ -9,6 +9,10 @@
 #include <chrono>
 #include <ctime>
 
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+#include <SFML/System.hpp>
+
 using namespace std;
 
 /// @file main.cpp
@@ -208,6 +212,27 @@ public:
     void daysLeft(vector<Task>& tasks); // Future feature to return the days left until the due date
 };
 
+class ToDoAppGUI 
+{
+    public:
+        ToDoAppGUI();
+        void run();
+
+    private:
+        void processEvents();
+        void update();
+        void render();
+        void loadFonts();
+        void drawTasks(vector<Task>& tasks);
+
+        sf::RenderWindow window; ///< The main window of the application.
+        sf::Font font; ///< The font used for rendering text.
+        sf::RectangleShape addButton; ///< The button to add a new task.
+        sf::Text addButtonText; ///< The text displayed on the add button.
+        vector<Task> tasks; ///< The list of tasks to be displayed.
+        
+};
+
 class UserInput 
 {
 public:    
@@ -265,74 +290,11 @@ public:
 /// @exception None
 int main() 
 {
-    vector<Task> tasks; // To-Do list for incomplete tasks
-    vector<Task> completedTasks; // To-Do list for completed tasks
-    int menuChoice = 0;
-    int nextId = 1;
-
-    // Load tasks from file
-    Task::loadTasks(tasks, nextId);
-
-    while (menuChoice != 7) 
-    {
-        ProgramFlow programFlow;
-        programFlow.viewTasks(tasks); // Display the current tasks
-        programFlow.displayMenu(); // Display the menu options
-        if (!(cin >> menuChoice)) 
-        {
-            cin.clear(); // Clear the error flag
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
-            cout << "Invalid input. Please enter a number." << endl;
-            continue; // Skip to the next iteration of the loop
-        }
-        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the newline character from the input buffer
-
-        switch (menuChoice) 
-        {
-            case 1: 
-            {
-                programFlow.addTask(tasks, nextId);
-                break;
-            }
-            case 2: 
-            {
-                programFlow.removeTask(tasks);
-                break;
-            }            
-            case 3:
-            {
-                programFlow.completeTask(tasks);
-                break;
-            }
-            case 4:
-            {
-                programFlow.undoTask(tasks); // Future feature to undo tasks
-                break;
-            }
-            case 5:
-            {
-                programFlow.editTask(tasks); // Future feature to edit tasks
-                break;
-            }
-            case 6:
-            {
-                programFlow.searchTasks(tasks); // Future feature to search tasks
-                break;
-            }
-            case 7:
-            {
-                Task::saveTasks(tasks); // Save tasks to file before exiting
-                cout << "Exiting program. Tasks saved to file." << endl;
-                return 0; // Exit the program
-            }
-            default:
-            {
-                cout << "Invalid option. Try again." << endl;
-                break;
-            }
-        }
-    }
-
+    vector<Task> tasks; // Vector to store tasks
+    int nextId = 1; // Next available task ID
+    Task::loadTasks(tasks, nextId); // Load tasks from file
+    ToDoAppGUI app; // Create an instance of the ToDoAppGUI class
+    app.run(); // Run the application
     return 0;
 }
 
@@ -936,6 +898,105 @@ void ProgramFlow::daysLeft(vector<Task>& tasks)
 {
     // Future feature to return the days left until the due date
     cout << "Days left feature is not implemented yet." << endl;
+}
+
+ToDoAppGUI::ToDoAppGUI() 
+    : window(sf::VideoMode(800, 600), "To-Do List App") // Initialize the window with a title and size
+{
+    loadFonts(); // Load fonts for rendering text
+    int nextId = 1; // Initialize the next task ID
+    Task::loadTasks(tasks, nextId); // Load tasks from file
+
+    addButton.setSize(sf::Vector2f(100.f, 50.f)); // Set the size of the add button
+    addButton.setFillColor(sf::Color::Green); // Set the button color to green
+    addButton.setPosition(650.f, 20.f); // Set the position of the button
+
+    addButtonText.setFont(font); // Set the font for the button text
+    addButtonText.setString("Add Task"); // Set the button text
+    addButtonText.setCharacterSize(20); // Set the text size
+    addButtonText.setFillColor(sf::Color::White); // Set the text color to white
+    addButtonText.setPosition(670.f, 35.f); // Set the position of the text on the button
+}
+
+void ToDoAppGUI::run() 
+{
+    while (window.isOpen()) 
+    {
+        processEvents(); // Process events (user input, window events)
+        update(); // Update the application state
+        render(); // Render the application
+    }
+}
+
+void ToDoAppGUI::processEvents()
+{
+    sf::Event event;
+    while (window.pollEvent(event)) 
+    {
+        if (event.type == sf::Event::Closed) 
+            window.close();
+
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left) // Check if left mouse button is pressed
+                {
+                    sf::Vector2f mousePos(event.mouseButton.x, event.mouseButton.y); // Get the mouse position
+                    if (addButton.getGlobalBounds().contains(mousePos)) // Check if the mouse is over the add button
+                    {
+                        cout << "Add Task button clicked!" << endl; // Handle add task button click
+                        
+                    }
+                }
+            }
+    }
+}
+
+void ToDoAppGUI::update()
+{
+    
+}
+
+void ToDoAppGUI::render()
+{
+    window.clear(sf::Color::White); // Clear the window with a white color
+    drawTasks(tasks); // Draw tasks on the window
+    window.draw(addButton); // Draw the add button
+    window.draw(addButtonText); // Draw the button text
+    window.display(); // Display the rendered content
+}
+
+void ToDoAppGUI::loadFonts()
+{
+    cout << "Loading fonts..." << endl;
+
+    if (!font.loadFromFile("assets\\fonts\\ARIAL.TTF")) // Load the font from a file
+    {
+        cout << "Error loading font!" << endl; // Handle font loading error
+    }
+    else 
+    {
+        cout << "Font loaded successfully!" << endl; // Font loaded successfully
+    }
+}
+
+void ToDoAppGUI::drawTasks(vector<Task>& tasks) 
+{
+    float y = 20.f; // Starting Y position for text
+    for (const auto& task : tasks) 
+    {
+        sf::Text text;
+        text.setFont(font);
+        text.setCharacterSize(18);
+        text.setFillColor(sf::Color::Black);
+
+        string taskStatus = task.completed ? "[X]" : "[ ]"; // Display completed status
+        string line = to_string(task.id) + ".) " + taskStatus + " " + task.name + " - " + task.description; // Create the task line 
+        text.setString(line);
+        text.setPosition(20.f, y);
+
+        window.draw(text);
+        y += 30.f; // Space between lines
+    }
 }
 
 string UserInput::convertUserInputLowercase(const string& str) 
