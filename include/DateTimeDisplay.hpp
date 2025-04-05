@@ -1,7 +1,6 @@
 #pragma once
-#include <sfml/Graphics.hpp>
-#include <sfml/Window.hpp>
-
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <string>
 #include <iostream>
 #include <ctime>
