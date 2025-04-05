@@ -48,7 +48,7 @@ void PanelButton::processEvent(sf::Event event, int posX, int posY)
         if (button.getGlobalBounds().contains(posX, posY)) 
         {
             // Change button color on hover
-            button.setFillColor(sf::Color(100, 100, 100)); // Change to a lighter gray color
+            button.setFillColor(sf::Color(100, 100, 100, 229)); // Change to a lighter gray color
         } 
         else 
         {

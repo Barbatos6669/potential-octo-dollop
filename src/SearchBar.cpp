@@ -17,15 +17,14 @@ SearchBar::SearchBar(float width, float height, int posX, int posY)
     searchText.setFont(font); // Set the font for the text
     searchText.setCharacterSize(20); // Set character size
     searchText.setFillColor(sf::Color::White); // Set text color to white
-    searchText.setPosition(posX + 6, posY + 5); // Position the text inside the search bar
+    searchText.setPosition(posX + 6, posY + 7); // Position the text inside the search bar
     searchText.setString("Search..."); // Set default text
 
-    searchIconTexture.loadFromFile("../assets/icons/SearchIcon.png"); // Load search icon texture
+    searchIconTexture.loadFromFile("../assets/icons/icon_search.png"); // Load search icon texture
 
     searchIcon.setTexture(searchIconTexture); // Set the texture for the search icon
-    searchIcon.setScale(0.5f, 0.5f); // Scale the icon to fit the search bar
-    searchIcon.setPosition(posX + width - 40, posY + 4); // Position the search icon inside the search bar
-
+    searchIcon.setScale(1.f, 1.f); // Scale the icon to fit the search bar
+    searchIcon.setPosition(posX + width - 45, posY + 10); // Position the search icon inside the search bar
 }
 
 // Destructor

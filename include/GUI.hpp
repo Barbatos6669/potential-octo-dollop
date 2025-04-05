@@ -35,14 +35,21 @@ private:
     PanelButton panelButtonTodayList;
     PanelButton panelButtonMyTasks;
     PanelButton panelButtonAddTask;
+    PanelButton panelButtonSettings;
+    PanelButton PanelButtonHelp;
     DateTimeDisplay dateTimeDisplay; 
 
+    // PanelButton panelButtonSettings;
+    
     sf::Font font;
     sf::Text text;
     // Additional GUI elements can be added here
 
     sf::RectangleShape rightPanel;
-    sf::RectangleShape listPanel;
+    sf::RectangleShape taskPanel;
+    sf::RectangleShape listBackgroundPanel;
+    sf::RectangleShape listForeGroundPanel;
+
 
     sf::Texture backgroundTexture;
     sf::Sprite backgroundSprite;
