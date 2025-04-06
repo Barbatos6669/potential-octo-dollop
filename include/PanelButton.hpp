@@ -37,5 +37,6 @@ class PanelButton
         sf::Text buttonText; // Text object for displaying the button text
         sf::Font font; // Font for the button text
         sf::Texture buttonTexture; // Texture for the button (if needed)
-        sf::Sprite buttonIcon; // Sprite for the button icon (if needed)       
+        sf::Sprite buttonIcon; // Sprite for the button icon (if needed)    
+        sf::Mouse::Button buttonState; // State of the button (pressed or not)   
 };

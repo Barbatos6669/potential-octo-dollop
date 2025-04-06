@@ -9,11 +9,21 @@
 #include "searchBar.hpp"
 #include "PanelButton.hpp"
 #include "DateTimeDisplay.hpp"
+#include "SettingsInterfaceScreen.hpp"
 
 using namespace std;
 
 class GUI {
 public:
+
+    enum class InterfaceScreen {
+        SETTINGS,
+        HELP,
+        TASKS,
+        TODAY
+    };
+
+    int currentScreen = 0;
 
     int windowWidth = 1080;
     int windowHeight = 720;
@@ -24,6 +34,7 @@ public:
     void render(const std::vector<Task>& tasks);
     void handleInput();
     void updateDisplay();
+    void baseSetup();
 
 private:
     sf::RenderWindow window;
@@ -38,6 +49,10 @@ private:
     PanelButton panelButtonSettings;
     PanelButton PanelButtonHelp;
     DateTimeDisplay dateTimeDisplay; 
+
+    // SettingsInterfaceScreen settingsInterfaceScreen;
+    SettingsInterfaceScreen settingsInterfaceScreen;
+
 
     // PanelButton panelButtonSettings;
     

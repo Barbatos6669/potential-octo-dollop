@@ -13,7 +13,8 @@ GUI::GUI(TaskManager& taskManager)
     panelButtonAddTask(windowWidth / 2 + 200, 40.f, windowWidth / 3 + 5, windowHeight - 45, "Add a Task", "../assets/icons/icon_particle.png", sf::Color(20, 20, 20, 200)), 
     dateTimeDisplay(windowWidth / 2 + 200, 70.f, windowWidth / 3 + 5, 6, "Date", "Time", sf::Color(20, 20, 20, 200)),
     panelButtonSettings(35, 35, 1000, 20, "", "../assets/icons/icon_gear.png", sf::Color(20, 20, 20, 0)), 
-    PanelButtonHelp(35, 35, 960, 20, "", "../assets/icons/icon_interrogation.png", sf::Color(20, 20, 20, 0))
+    PanelButtonHelp(35, 35, 960, 20, "", "../assets/icons/icon_interrogation.png", sf::Color(20, 20, 20, 0)),
+    settingsInterfaceScreen(windowWidth, windowHeight, 0, 0, "Settings", sf::Color(100, 20, 20, 10), "../assets/icons/icon_gear.png")   
 
 {
     window.setFramerateLimit(60);   
@@ -54,27 +55,7 @@ GUI::~GUI()
 void GUI::render(const std::vector<Task>& tasks) 
 {
     window.clear();     
-    window.draw(taskPanel);
-    window.draw(rightPanel);
-    window.draw(backgroundSprite); // Draw the background sprite
-
-    // Draw the search bar
-    searchBar.draw(window);
-    // Draw the panel button
-    panelButtonNewList.draw(window);
-    panelButtonTodayList.draw(window);
-    panelButtonMyTasks.draw(window);
-    panelButtonAddTask.draw(window);
-    // Draw the date and time display
-    dateTimeDisplay.draw(window);
-    panelButtonSettings.draw(window);
-    PanelButtonHelp.draw(window);
-
-    // Draw the list background panel
-    window.draw(listBackgroundPanel);
-    // Draw the list foreground panel
-    window.draw(listForeGroundPanel);
-    // Display the window
+    baseSetup(); 
     window.display();
 }
 
@@ -106,6 +87,27 @@ void GUI::handleInput()
         panelButtonAddTask.processEvent(event, mouseX, mouseY);
         panelButtonSettings.processEvent(event, mouseX, mouseY);
         PanelButtonHelp.processEvent(event, mouseX, mouseY);
+        
+        switch (currentScreen) 
+        {
+            case 0: // SETTINGS
+                // Handle settings screen events
+                settingsInterfaceScreen.handleEvent(event, mouseX, mouseY);
+                settingsInterfaceScreen.update(window);
+                settingsInterfaceScreen.render(window);
+                break;
+            case 1: // HELP
+                // Handle help screen events
+                break;
+            case 2: // TASKS
+                // Handle tasks screen events
+                break;
+            case 3: // TODAY
+                // Handle today screen events
+                break;
+            default:
+                break;
+        }
 
     }
 }
@@ -117,4 +119,23 @@ void GUI::updateDisplay()
     // Update the date and time display
     dateTimeDisplay.updateDate(dateTimeDisplay.displayTextStringDate);
 }
+
+void GUI::baseSetup()
+{
+    window.draw(taskPanel);
+    window.draw(rightPanel);
+    window.draw(backgroundSprite); 
+    searchBar.draw(window);
+    panelButtonNewList.draw(window);
+    panelButtonTodayList.draw(window);
+    panelButtonMyTasks.draw(window);
+    panelButtonAddTask.draw(window);
+    dateTimeDisplay.draw(window);
+    panelButtonSettings.draw(window);
+    PanelButtonHelp.draw(window);
+    window.draw(listBackgroundPanel);
+    window.draw(listForeGroundPanel);
+}
+
+
 

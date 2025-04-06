@@ -16,6 +16,7 @@
         "src/SearchBar.cpp",
         "src/PanelButton.cpp",
         "src/DateTimeDisplay.cpp",
+        "src/SettingsInterfaceScreen.cpp",
         "-o",
         "${workspaceFolder}/bin/main.exe",
         "-Iinclude",
