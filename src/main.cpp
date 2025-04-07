@@ -1,28 +1,20 @@
+#include <iostream>
+
 #include <SFML/Graphics.hpp>
-#include "GUI.hpp"
-#include "TaskManager.hpp"
+#include <SFML/Window.hpp>
+
+#include "UIConfig.hpp"
+#include "ProgramManager.hpp"
 
 
-int main()
-{
-    // Create a TaskManager instance
-    TaskManager taskManager;
-    // Create a GUI instance
-    GUI gui(taskManager);
-    // LoadG tasks from a file
-    taskManager.loadTasksFromFile("../tasks.txt");
-    // Main loop
-    while (true) 
-    {
-        // Handle user input
-        gui.handleInput();
-        // Update the display
-        gui.updateDisplay();
-        // Render the GUI with tasks
-        gui.render(taskManager.getAllTasks());
-    }
-    // Save tasks to a file before exiting
-    taskManager.saveTasksToFile("../tasks.txt");
+using namespace std;
+
+int main() {
+    cout << "Hello, SFML!" << endl;
+
+    // Create a window
+    ProgramManager programManager; // Create an instance of ProgramManager
+    programManager.run(); // Run the program
 
     return 0;
 }
