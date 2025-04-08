@@ -42,8 +42,6 @@ class UIConfig
         static const int fontSize = 24; // Font size for UI elements
         static const int iconSize = 50; // Icon size for UI elements
 
-        static const std::string fontType;
-
         static const std::string iconPath; // Path to the icon
         static const std::string backgroundPath; // Path to the background image
 

@@ -30,10 +30,13 @@
 #include "UIConfig.hpp"
 #include "PersistentUI.hpp"
 #include "MyDay.hpp"
-#include "Tasks.hpp"
+#include "TasksState.hpp"
 #include "AddTask.hpp"
 #include "Settings.hpp"
 #include "Calender.hpp"
+#include "TaskList.hpp"
+#include "TaskItem.hpp"
+
 
 class ProgramManager
 {
@@ -53,10 +56,13 @@ class ProgramManager
         AppState currentState; // Current application state
 
         MyDay myDay; // My Day object
-        Tasks tasks; // Tasks object
+        TasksState tasksState; // Tasks object
         AddTask addTask; // Add Task object   
         Settings settings; // Settings object 
         Calender calender; // Calendar object
+
+        TaskList taskList; // Task List object
+        
         
         void processEvents(); // Process events
         void update(); // Update the program state

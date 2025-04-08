@@ -29,13 +29,16 @@ ProgramManager::ProgramManager()
     persistentUI(),
     currentState(AppState::MyDay),
     myDay(UIConfig::panelWidth, UIConfig::panelHeight, 0, 0),
-    tasks(UIConfig::panelWidth, UIConfig::panelHeight, 0, 0),
+    tasksState(UIConfig::panelWidth, UIConfig::panelHeight, 0, 0),
     addTask(UIConfig::panelWidth, UIConfig::panelHeight, 0, 0), 
     settings(UIConfig::panelWidth, UIConfig::panelHeight, 0, 0),
-    calender(UIConfig::panelWidth, UIConfig::panelHeight, 0, 0) 
+    calender(UIConfig::panelWidth, UIConfig::panelHeight, 0, 0), 
+    taskList(UIConfig::panelWidth, UIConfig::panelHeight, 0, 0)    
 {
     // Initialize the window and other resources here
     window.setFramerateLimit(60); // Set the frame rate limit
+
+    taskList.loadFromFile("../tasks.txt"); // Load tasks from a file
 }
 
 // Destructor
@@ -82,7 +85,7 @@ void ProgramManager::processEvents()
         else if (persistentUI.tasksButton.buttonShape.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) 
         {
             std::cout << "Tasks button clicked!" << std::endl; // Handle Tasks button click
-            currentState = AppState::Tasks; // Change the state to Tasks
+            currentState = AppState::Tasks; // Change the state to Tasks 
             std::cout << "Current state: " << static_cast<int>(currentState) << std::endl; // Print the current state
         }
         else if (persistentUI.newListButton.buttonShape.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) 
@@ -110,6 +113,7 @@ void ProgramManager::processEvents()
             std::cout << "Current state: " << static_cast<int>(currentState) << std::endl; // Print the current state      
         }
     }
+    taskList.processEvents(event); // Process events for the task list
 
     persistentUI.processEvents(event); // Process events for the persistent UI
 }
@@ -166,7 +170,9 @@ void ProgramManager::render()
             break;
         case AppState::Tasks:
             persistentUI.render(window); // Render the persistent UI for Tasks
-            tasks.render(window); // Render the Tasks state
+            tasksState.render(window); // Render the Tasks state
+            taskList.render(window); // Render the Task List state
+            //taskList.render(window); // Render the Task List state            
             break;
         case AppState::Settings:
             persistentUI.render(window); // Render the persistent UI for Settings
