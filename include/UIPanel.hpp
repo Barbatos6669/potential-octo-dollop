@@ -1,3 +1,26 @@
+/********************************************************************************************/
+/*  UIPanel.hpp                                                                             */
+/********************************************************************************************/
+/*                               This file is part of:                                      */
+/*                                     To Do List                                           */       
+/*                                                                                          */
+/********************************************************************************************/
+/*                                                                                          */
+/*  This program is free software: you can redistribute it and/or modify                    */
+/*  it under the terms of the GNU General Public License as published by                    */
+/*  the Free Software Foundation, either version 3 of the License, or                       */
+/*  (at your option) any later version.                                                     */
+/*                                                                                          */
+/*                                                                                          */
+/*  This program is distributed in the hope that it will be useful,                         */
+/*  but WITHOUT ANY WARRANTY; without even the implied warranty of                          */
+/*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                           */
+/*  GNU General Public License for more details.                                            */
+/*                                                                                          */
+/*  You should have received a copy of the GNU General Public License                       */
+/*  along with this program.  If not, see <http://www.gnu.org/licenses/>.                   */
+/*                                                                                          */
+/********************************************************************************************/
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -25,7 +48,7 @@ class UIPanel
 
         // Constructor and Destructor
         UIPanel(int width = UIConfig::panelWidth, int height = UIConfig::panelHeight, int x = 0, int y = 0, sf::Color color = sf::Color(50, 50, 50), const std::string& backgroundImagePath = ""); // Constructor with default values
-        
+
         ~UIPanel();
 
         void draw(sf::RenderWindow& window); // Draw the panel
