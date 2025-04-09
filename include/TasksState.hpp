@@ -31,16 +31,42 @@
 #include "UIState.hpp"
 #include "UIConfig.hpp"
 
+/// @brief Class representing the Tasks state in the application.
+/// @details This class inherits from UIState and is responsible for rendering and updating the Tasks panel.
+/// It includes a panel for displaying tasks and a title text.
+/// @details The Tasks panel is a rectangular shape with a specified width, height, and position.
+/// @details The title text is displayed at the top of the panel and can be customized with a font and color.
 class TasksState : public UIState
 {
     public:
         // Constructor and Destructor
+        /// @brief Constructor for the TasksState class.
+        /// @param width Width of the Tasks panel (default: 200)
+        /// @param height Height of the Tasks panel (default: 800)
+        /// @param x X position of the Tasks panel (default: 0)
+        /// @param y Y position of the Tasks panel (default: 0)
+        /// @details Initializes the Tasks panel with the specified dimensions and position.
         TasksState(int width = 200, int height = 800, int x = 0, int y = 0); // Constructor with default values
-        ~TasksState(); // Destructor
 
-        void render(sf::RenderWindow& window); // Render the My Day state
-        void update(); // Update the My Day state
-        void processEvents(sf::Event& event); // Process events related to the My Day state
+        /// @brief Destructor for the TasksState class.
+        /// @details Cleans up resources used by the Tasks panel.
+        /// @details The destructor is virtual to ensure proper cleanup of derived classes.
+        ~TasksState();
+        
+        /// @brief  Render the Tasks panel.
+        /// @details This function is responsible for rendering the Tasks panel on the provided window.
+        /// @param window 
+        void render(sf::RenderWindow& window); 
+
+        /// @brief  Update the Tasks panel state.
+        /// @details This function is responsible for updating the state of the Tasks panel.
+        /// @details It may include updating the position, size, or other properties of the panel.
+        void update(); 
+
+        /// @brief  Process events related to the Tasks panel.
+        /// @details This function is responsible for processing events related to the Tasks panel.
+        /// @param event The event to process.
+        void processEvents(sf::Event& event);
 
     private:
 

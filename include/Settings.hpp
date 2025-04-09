@@ -35,11 +35,35 @@ class Settings : public UIState
 {
     public:
         // Constructor and Destructor
+        /// @brief Constructor for the Settings class.
+        /// @param width Width of the settings panel (default: 200)
+        /// @param height Height of the settings panel (default: 800)
+        /// @param x X position of the settings panel (default: 0)
+        /// @param y Y position of the settings panel (default: 0)
+        /// @details Initializes the settings panel and title text with the specified dimensions and position.
         Settings(int width = 200, int height = 800, int x = 0, int y = 0); // Constructor with default values
+
+        /// @brief Destructor for the Settings class.
+        /// @details Cleans up resources used by the settings panel.
+        /// @details The destructor is virtual to ensure proper cleanup of derived classes.
+        /// @note The destructor is responsible for releasing any dynamically allocated resources.
         ~Settings(); // Destructor
 
+        /// @brief Render the settings state.
+        /// @param window Reference to the SFML render window where the settings panel will be drawn.
+        /// @details This method is responsible for rendering the settings panel on the provided render window.
+        /// @details It uses the SFML graphics library to draw the panel and its contents.
+        /// @note The render method should be called within the main rendering loop of the application.        
         void render(sf::RenderWindow& window); // Render the My Day state
+
+        /// @brief Update the settings state.
+        /// @details This method is responsible for updating the state of the settings panel.
+        /// @details It may include updating the position, size, or appearance of the panel based on user interactions or other events.
+        /// @note The update method should be called within the main update loop of the application.
         void update(); // Update the My Day state
+
+        /// @brief Process events related to the settings state.
+        /// @param event 
         void processEvents(sf::Event& event); // Process events related to the My Day state
 
     private:

@@ -51,9 +51,21 @@ class UITime
 
         sf::Color textColor; // Color of the text
 
+        /// @brief Constructor for the UITime class.
+        /// @details Initializes the UITime object with the specified position, size, and color.
+        /// @param x X position of the time display (default: 0)
+        /// @param y Y position of the time display (default: 0)
+        /// @param w Width of the time display (default: 200)
+        /// @param h Height of the time display (default: 50)
+        /// @param color Color of the text (default: white)
+        /// @note The constructor sets the font, text properties, and initial position of the time display.
         UITime(int x = 0, int y = 0, int w = 200, int h = 50, sf::Color color = sf::Color(255, 255, 255)); // Constructor with default values
+
+        /// @brief Destructor for the UITime class.
+        /// @details Cleans up the resources used by the UITime object.
         ~UITime(); // Destructor
 
+        
         void update(); // Update the time display
         void render(sf::RenderWindow& window); // Render the time display
         void processEvents(sf::Event& event); // Process events related to the time display
