@@ -76,9 +76,9 @@ class UIButton
         /// @note The destructor is responsible for releasing any resources allocated during the lifetime of the button.
         ~UIButton(); 
 
-        /// @brief  Set the button's text.
-        /// @details This function sets the text of the button and updates its position accordingly.
-        /// @param window 
+        /// @brief  Render the button to the window.
+        /// @details This function renders the button to the provided window.
+        /// @param window The window to render the button on.
         void render(sf::RenderWindow& window);
 
         /// @brief  Set the button's text.
