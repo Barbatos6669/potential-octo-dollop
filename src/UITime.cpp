@@ -118,8 +118,6 @@ void UITime::GetCurrentDay() {
     std::strftime(buffer, sizeof(buffer), "%A", localTime);
     dayString = buffer;
     dayText.setString(dayString);
-
-
 }
 
 

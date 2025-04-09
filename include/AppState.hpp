@@ -21,6 +21,11 @@
 /*  along with this program.  If not, see <http://www.gnu.org/licenses/>.                   */
 /*                                                                                          */
 /********************************************************************************************/
+
+/// @brief This file defines the AppState enum class, which represents the different states of the application.
+/// @details The AppState enum class is used to manage the current state of the application, allowing for easy switching between different UI states.
+/// @note The enum class includes states such as MyDay, Calendar, Tasks, Settings, NewList, AddTask, and Search.
+/// @note This enum class is part of a larger application that manages tasks and events.
 enum class AppState 
 {
     MyDay,

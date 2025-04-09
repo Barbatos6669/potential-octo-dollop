@@ -44,10 +44,27 @@ class UIState
         int posY; // Y position of the panel
 
         // Constructor and Destructor
+        /// @brief Default constructor for the UIState class.
+        /// @param width Width of the UI state window
+        /// @param height Height of the UI state window
+        /// @param x X position of the UI state window
+        /// @param y Y position of the UI state window
+        /// @param title Title of the UI state window
+        /// @details Initializes the UI state with the specified dimensions and position.
         UIState(int width = 200, int height = 800, int x = 0, int y = 0, std::string title = "UI State"); // Constructor with default values
+
+        
         ~UIState(); // Destructor
 
+        /// @brief Render the UI state.
+        /// @param window Reference to the SFML render window where the UI state will be drawn.
         void render(sf::RenderWindow& window); // Render the UI state
+
+        /// @brief Update the UI state.
         void update(); // Update the UI state
+
+        /// @brief Process events related to the UI state.
+        /// @param event Reference to the SFML event to be processed.
+        /// @details This function handles events such as mouse clicks and keyboard input.
         void processEvents(sf::Event& event); // Process events related to the UI state
 };

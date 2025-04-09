@@ -63,8 +63,15 @@ class ProgramManager
 
         TaskList taskList; // Task List object
         
-        
-        void processEvents(); // Process events
-        void update(); // Update the program state
-        void render(); // Render the program
+        /// @brief Function to handle events
+        /// @details This function processes events such as window close, key presses, and mouse clicks.
+        void processEvents();
+
+        /// @brief Function to update the program state
+        /// @details This function updates the program state based on the current application state.
+        void update();
+
+        /// @brief Function to render the program
+        /// @details This function renders the current state of the program to the window.
+        void render();
 };
