@@ -92,5 +92,4 @@ class UIButton
         /// @param text The text to be set on the button.
         /// @note The text is displayed on the button and can be changed at any time.
         void processEvents(sf::Event& event); 
-
 };

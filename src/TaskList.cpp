@@ -14,7 +14,8 @@ TaskList::TaskList(int width, int height, int x, int y)
 }
 
 // Destructor
-TaskList::~TaskList() {
+TaskList::~TaskList() 
+{
     // Destructor implementation (if needed)
 }
 
@@ -45,8 +46,10 @@ void TaskList::processEvents(const sf::Event& event)
 
         bool removed = false;
 
-        for (auto it = taskItems.begin(); it != taskItems.end(); ++it) {
-            if (it->isClicked(mouseX, mouseY)) {
+        for (auto it = taskItems.begin(); it != taskItems.end(); ++it) 
+        {
+            if (it->isClicked(mouseX, mouseY)) 
+            {
                 taskItems.erase(it);
                 std::cout << "Task item clicked and removed." << std::endl;
                 removed = true;
@@ -57,7 +60,8 @@ void TaskList::processEvents(const sf::Event& event)
         if (removed) {
             // Now reposition safely after removal
             int y = 120;
-            for (auto& task : taskItems) {
+            for (auto& task : taskItems) 
+            {
                 task.setPosition(450, y);
                 y += 60;
 

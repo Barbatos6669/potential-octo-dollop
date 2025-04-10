@@ -61,8 +61,10 @@ void ProgramManager::run()
 // Process events
 void ProgramManager::processEvents() 
 {
-    while (window.pollEvent(event)) {
-        if (event.type == sf::Event::Closed) {
+    while (window.pollEvent(event)) 
+    {
+        if (event.type == sf::Event::Closed) 
+        {
             window.close(); // Close the window if the close event is received
         }
     }

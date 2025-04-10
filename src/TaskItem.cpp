@@ -27,7 +27,8 @@ void TaskItem::render(sf::RenderWindow& window)
     window.draw(taskText); // Draw the task item text
 }
 
-void TaskItem::setPosition(float x, float y) {
+void TaskItem::setPosition(float x, float y) 
+{
     background.setPosition(x, y);
     taskText.setPosition(x + 10, y + 10);
 }
