@@ -35,6 +35,7 @@ PersistentUI::PersistentUI()
     settingsButton(UIConfig::panelButtonWidth, UIConfig::panelButtonHeight, 0, 0, UIConfig::accentColor, "", "../assets/icons/icon_gear.png"),
     calendarButton(UIConfig::panelButtonWidth, UIConfig::panelButtonHeight, 0, 0, UIConfig::accentColor, "", "../assets/icons/icon_grid.png"),
     timeDisplay(0, 0, 200, 50, UIConfig::textColor) // Initialize timeDisplay with default values
+    
 {
     // Set the position of the search button
     searchButton.buttonShape.setPosition(UIConfig::spacing, UIConfig::spacing); // Set the position of the button

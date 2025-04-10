@@ -80,7 +80,6 @@ void UITime::render(sf::RenderWindow& window)
 void UITime::processEvents(sf::Event& event) 
 {
     // Process events related to the time display here if needed
-
 }
 
 // Get the current time and date
@@ -106,8 +105,7 @@ void UITime::GetCurrentDate() {
     char buffer[20];
     std::strftime(buffer, sizeof(buffer), "%Y-%m-%d", localTime);
     dateString = buffer;
-    dateText.setString(dateString);
-    
+    dateText.setString(dateString);    
 }
 
 void UITime::GetCurrentDay() {

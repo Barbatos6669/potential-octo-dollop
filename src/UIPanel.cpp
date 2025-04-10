@@ -41,8 +41,10 @@ UIPanel::UIPanel(int width, int height, int x, int y, sf::Color color, const std
     panelOffset.setFillColor(sf::Color(UIConfig::secondaryColor)); // Set the color of the offset panel
 
     // Optional background
-    if (!backgroundImagePath.empty()) {
-        if (backgroundTexture.loadFromFile(backgroundImagePath)) {
+    if (!backgroundImagePath.empty()) 
+    {
+        if (backgroundTexture.loadFromFile(backgroundImagePath)) 
+        {
             backgroundSprite.setTexture(backgroundTexture);
             backgroundSprite.setPosition(posX, posY);
             backgroundSprite.setScale(
@@ -50,7 +52,9 @@ UIPanel::UIPanel(int width, int height, int x, int y, sf::Color color, const std
                 float(panelHeight) / backgroundTexture.getSize().y
             );
             hasBackground = true;
-        } else {
+        } 
+        else 
+        {
             std::cerr << "Failed to load background image: " << backgroundImagePath << std::endl;
         }
     }
