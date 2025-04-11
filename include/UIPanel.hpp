@@ -1,77 +1,47 @@
-/********************************************************************************************/
-/*  UIPanel.hpp                                                                             */
-/********************************************************************************************/
-/*                               This file is part of:                                      */
-/*                                     To Do List                                           */       
-/*                                                                                          */
-/********************************************************************************************/
-/*                                                                                          */
-/*  This program is free software: you can redistribute it and/or modify                    */
-/*  it under the terms of the GNU General Public License as published by                    */
-/*  the Free Software Foundation, either version 3 of the License, or                       */
-/*  (at your option) any later version.                                                     */
-/*                                                                                          */
-/*                                                                                          */
-/*  This program is distributed in the hope that it will be useful,                         */
-/*  but WITHOUT ANY WARRANTY; without even the implied warranty of                          */
-/*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                           */
-/*  GNU General Public License for more details.                                            */
-/*                                                                                          */
-/*  You should have received a copy of the GNU General Public License                       */
-/*  along with this program.  If not, see <http://www.gnu.org/licenses/>.                   */
-/*                                                                                          */
-/********************************************************************************************/
 #pragma once
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-
-#include "iostream"
 #include "UIConfig.hpp"
+#include "UIElement.hpp"
 
-class UIPanel
+class UIPanel : public UIElement
 {
-    public:
-        sf::RectangleShape windowPanel; // Left panel shape
-        sf::RectangleShape panelOffset; // Offset panel shape
+public:
+    sf::RectangleShape panelShape; // Shape of the panel
+    sf::Texture panelTexture;      // Texture of the panel
+    std::string texturePath;       // Path to the texture file
 
-        sf::Color panelColor; // Color of the panel
+    // Constructor
+    UIPanel(const sf::Vector2f& size = sf::Vector2f(200, 200), const sf::Color& color = sf::Color::White);
 
-        int panelWidth; // Width of the panel
-        int panelHeight; // Height of the panel
-        int posX; // X position of the panel
-        int posY; // Y position of the panel     
+    // Destructor
+    ~UIPanel();
 
-        // Option to add a background image
-        sf::Texture backgroundTexture; // Background texture
-        sf::Sprite backgroundSprite; // Background sprite
-        bool hasBackground; // Flag to indicate if the panel has a background image
+    // Override UIElement methods
+    void render(sf::RenderWindow& window) override; // Function to render the panel
+    void update() override;                         // Function to update the panel (if needed)
+    void handleEvents(const sf::Event& event) override; // Corrected signature    // Function to handle events (if needed)
 
-        // Constructor and Destructor
-        /// \brief Default constructor
-        /// \details Initializes the UIPanel with default values for width, height, position, and color.
-        /// \param width Width of the panel (default is UIConfig::panelWidth)
-        /// \param height Height of the panel (default is UIConfig::panelHeight)
-        /// \param x X position of the panel (default is 0)
-        /// \param y Y position of the panel (default is 0)
-        /// \param color Color of the panel (default is sf::Color(50, 50, 50))
-        /// \param backgroundImagePath Path to the background image (default is an empty string)
-        /// \note The constructor sets the size and position of the panel, as well as the color and background image if provided.
-        /// \note The background image is loaded from the specified path if provided, otherwise it is not used.
-        UIPanel(int width = UIConfig::panelWidth, int height = UIConfig::panelHeight, int x = 0, int y = 0, sf::Color color = sf::Color(50, 50, 50), const std::string& backgroundImagePath = ""); // Constructor with default values
+    // Load texture from file
+    bool loadFromFile(const std::string& filename);
 
-        /// \brief Destructor
-        /// \details Cleans up the UIPanel object and releases any resources used.
-        /// \note The destructor is responsible for releasing any resources allocated by the UIPanel object.
-        /// \note In this case, it does not have any specific cleanup code, but it is good practice to define a destructor for classes that manage resources.
-        ~UIPanel();
+    // Getters for panel properties
+    sf::Vector2f getSize() const override;
+    void getPosition(sf::Vector2f& position) const override;
+    sf::Color getColor() const override;
+    sf::Color getOutlineColor() const override;
+    float getOutlineThickness() const override;
+    const sf::Vector2f& getOrigin() const override;
+    const sf::Texture& getTexture() const;
 
-        /// @brief  Set the position of the panel
-        /// @param window 
-        void draw(sf::RenderWindow& window); 
+    // Setters for panel properties
+    void setSize(const sf::Vector2f& size) override;
+    void setPosition(const sf::Vector2f& position) override;
+    void setColor(const sf::Color& color) override;
+    void setOutlineColor(const sf::Color& color) override;
+    void setOutlineThickness(float thickness) override;
+    void setOrigin(const sf::Vector2f& origin) override;
+    void setTexture(const sf::Texture& texture, bool resetRect = false);
 
-        /// \brief Set the position of the panel
-        void update(); 
-
-        /// \brief Set the position of the panel
-        void processEvents(sf::Event& event);
+private:
+    // Private members (if any)
 };
+

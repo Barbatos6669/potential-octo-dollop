@@ -1,77 +1,33 @@
-/********************************************************************************************/
-/*  ProgramManager.hpp                                                                      */
-/********************************************************************************************/
-/*                               This file is part of:                                      */
-/*                                     To Do List                                           */       
-/*                                                                                          */
-/********************************************************************************************/
-/*                                                                                          */
-/*  This program is free software: you can redistribute it and/or modify                    */
-/*  it under the terms of the GNU General Public License as published by                    */
-/*  the Free Software Foundation, either version 3 of the License, or                       */
-/*  (at your option) any later version.                                                     */
-/*                                                                                          */
-/*                                                                                          */
-/*  This program is distributed in the hope that it will be useful,                         */
-/*  but WITHOUT ANY WARRANTY; without even the implied warranty of                          */
-/*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                           */
-/*  GNU General Public License for more details.                                            */
-/*                                                                                          */
-/*  You should have received a copy of the GNU General Public License                       */
-/*  along with this program.  If not, see <http://www.gnu.org/licenses/>.                   */
-/*                                                                                          */
-/********************************************************************************************/
+
 #pragma Once 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-#include "iostream"
-#include "AppState.hpp"
 #include "UIConfig.hpp"
-#include "PersistentUI.hpp"
-#include "MyDay.hpp"
-#include "TasksState.hpp"
-#include "AddTask.hpp"
-#include "Settings.hpp"
-#include "Calender.hpp"
-#include "TaskList.hpp"
-#include "TaskItem.hpp"
-
+#include "UIPanel.hpp"
+#include "UISearchBar.hpp"
+#include "UIButton.hpp"
 
 class ProgramManager
 {
     public:
-        // Constructor and Destructor
-        ProgramManager();
-        ~ProgramManager();
+        ProgramManager(); // Constructor
+        ~ProgramManager(); // Destructor
 
-        void run(); // Main loop of the program
+        void run(); // Main loop of the program   
+        void setupWindow(); // Setup the window properties
+        void setupPanels(); // Setup the panels properties
+        void setupSearchBar(); // Setup the search bar properties  
+        void setupButtons(); // Setup the buttons properties   
 
     private:
-        sf::RenderWindow window; // SFML window
-        sf::Event event; // SFML event
-        sf::Clock clock; // SFML clock
-
-        PersistentUI persistentUI; // Persistent UI object
-        AppState currentState; // Current application state
-
-        MyDay myDay; // My Day object
-        TasksState tasksState; // Tasks object
-        AddTask addTask; // Add Task object   
-        Settings settings; // Settings object 
-        Calender calender; // Calendar object
-
-        TaskList taskList; // Task List object
+        sf::RenderWindow window; // SFML window object
+        UIPanel leftPanel; // UI panel object.
+        UIPanel rightPanel; // UI panel object.
+        UISearchBar searchBar; // UI search bar object.
+        UIButton buttonMyDay; // UI button object.
         
-        /// @brief Function to handle events
-        /// @details This function processes events such as window close, key presses, and mouse clicks.
-        void processEvents();
-
-        /// @brief Function to update the program state
-        /// @details This function updates the program state based on the current application state.
-        void update();
-
-        /// @brief Function to render the program
-        /// @details This function renders the current state of the program to the window.
-        void render();
+        void processEvents(); // Process events
+        void update(); // Update the program state
+        void render(); // Render the program
 };

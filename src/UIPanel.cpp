@@ -1,93 +1,114 @@
-/********************************************************************************************/
-/*  UIPanel.cpp                                                                             */
-/********************************************************************************************/
-/*                               This file is part of:                                      */
-/*                                     To Do List                                           */       
-/*                                                                                          */
-/********************************************************************************************/
-/*                                                                                          */
-/*  This program is free software: you can redistribute it and/or modify                    */
-/*  it under the terms of the GNU General Public License as published by                    */
-/*  the Free Software Foundation, either version 3 of the License, or                       */
-/*  (at your option) any later version.                                                     */
-/*                                                                                          */
-/*                                                                                          */
-/*  This program is distributed in the hope that it will be useful,                         */
-/*  but WITHOUT ANY WARRANTY; without even the implied warranty of                          */
-/*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                           */
-/*  GNU General Public License for more details.                                            */
-/*                                                                                          */
-/*  You should have received a copy of the GNU General Public License                       */
-/*  along with this program.  If not, see <http://www.gnu.org/licenses/>.                   */
-/*                                                                                          */
-/********************************************************************************************/
 #include "../include/UIPanel.hpp"
-
-#include "UIConfig.hpp"
+#include <iostream>
 
 // Constructor
-UIPanel::UIPanel(int width, int height, int x, int y, sf::Color color, const std::string& backgroundImagePath) 
-    : panelWidth(width), panelHeight(height), posX(x), posY(y), panelColor(color)
+UIPanel::UIPanel(const sf::Vector2f& size, const sf::Color& color)
+    : panelShape(size) // Initialize the panel shape with the given size
 {
-    int panelWidth = UIConfig::WINDOW_WIDTH / 3; // Set the width of the panel to one-third of the window width
-
-    // Initialize the panel shape
-    windowPanel.setSize(sf::Vector2f(panelWidth, UIConfig::WINDOW_HEIGHT)); // Set the size of the panel
-    windowPanel.setPosition(posX, posY); // Set the position of the panel
-    windowPanel.setFillColor(sf::Color(UIConfig::primaryColor)); // Set the color of the panel
-
-    panelOffset.setSize(sf::Vector2f(panelWidth - UIConfig::linePadding, UIConfig::WINDOW_HEIGHT - UIConfig::linePadding)); // Set the size of the offset panel
-    panelOffset.setPosition(posX + UIConfig::linePadding, posY + UIConfig::linePadding); // Set the position of the offset panel
-    panelOffset.setFillColor(sf::Color(UIConfig::secondaryColor)); // Set the color of the offset panel
-
-    // Optional background
-    if (!backgroundImagePath.empty()) {
-        if (backgroundTexture.loadFromFile(backgroundImagePath)) {
-            backgroundSprite.setTexture(backgroundTexture);
-            backgroundSprite.setPosition(posX, posY);
-            backgroundSprite.setScale(
-                float(panelWidth) / backgroundTexture.getSize().x,
-                float(panelHeight) / backgroundTexture.getSize().y
-            );
-            hasBackground = true;
-        } else {
-            std::cerr << "Failed to load background image: " << backgroundImagePath << std::endl;
-        }
-    }
-
-    std::cout << "WindowPanel initialized." << std::endl;
+    panelShape.setFillColor(color); // Set the initial color of the panel
 }
 
 // Destructor
-UIPanel::~UIPanel() 
+UIPanel::~UIPanel() {}
+
+// Render the panel
+void UIPanel::render(sf::RenderWindow& window)
 {
-    // Clean up resources here if needed
-    std::cout << "WindowPanel destroyed." << std::endl;
-
+    window.draw(panelShape); // Draw the panel shape on the window
 }
 
-// Draw the panel
-void UIPanel::draw(sf::RenderWindow& window) 
-{   
-    // Draw other UI elements here if needed
-    window.draw(windowPanel); // Draw the panel shape
-    window.draw(panelOffset); // Draw the offset panel shape
-    window.draw(backgroundSprite); // Draw the background sprite if it exists
-    
-}
-
-// Update the panel properties
-void UIPanel::update() 
+// Update the panel (if needed)
+void UIPanel::update()
 {
-    // Example: Change the background color over time or based on some condition
+    // Update logic for the panel (if needed)
 }
 
-// Process events related to the panel
-void UIPanel::processEvents(sf::Event& event) 
+// Handle events (if needed)
+void UIPanel::handleEvents(const sf::Event& event)
 {
-    // Process events related to the panel here if needed
-    std::cout << "WindowPanel processing events." << std::endl;
-
-    // Example: Handle mouse clicks or keyboard input    
+    // Event handling logic for the panel (if needed)
 }
 
+// Load texture from file
+bool UIPanel::loadFromFile(const std::string& filename)
+{
+    if (!panelTexture.loadFromFile(filename)) // Load the texture from the file
+    {
+        std::cerr << "Error loading texture from file: " << filename << std::endl;
+        return false; // Return false if loading fails
+    }
+    panelShape.setTexture(&panelTexture); // Set the loaded texture to the panel shape
+    return true; // Return true if loading is successful
+}
+
+// Getters
+sf::Vector2f UIPanel::getSize() const
+{
+    return panelShape.getSize(); // Return the size of the panel shape
+}
+
+void UIPanel::getPosition(sf::Vector2f& position) const
+{
+    position = panelShape.getPosition(); // Get the position of the panel shape
+}
+
+sf::Color UIPanel::getColor() const
+{
+    return panelShape.getFillColor(); // Return the fill color of the panel shape
+}
+
+sf::Color UIPanel::getOutlineColor() const
+{
+    return panelShape.getOutlineColor(); // Return the outline color of the panel shape
+}
+
+float UIPanel::getOutlineThickness() const
+{
+    return panelShape.getOutlineThickness(); // Return the outline thickness of the panel shape
+}
+
+const sf::Vector2f& UIPanel::getOrigin() const
+{
+    return panelShape.getOrigin(); // Return the origin of the panel shape
+}
+
+const sf::Texture& UIPanel::getTexture() const
+{
+    return *panelShape.getTexture(); // Return the texture of the panel shape
+}
+
+// Setters
+void UIPanel::setSize(const sf::Vector2f& size)
+{
+    panelShape.setSize(size); // Set the size of the panel shape
+}
+
+void UIPanel::setPosition(const sf::Vector2f& position)
+{
+    panelShape.setPosition(position); // Set the position of the panel shape
+}
+
+void UIPanel::setColor(const sf::Color& color)
+{
+    panelShape.setFillColor(color); // Set the fill color of the panel shape
+}
+
+void UIPanel::setOutlineColor(const sf::Color& color)
+{
+    panelShape.setOutlineColor(color); // Set the outline color of the panel shape
+}
+
+void UIPanel::setOutlineThickness(float thickness)
+{
+    panelShape.setOutlineThickness(thickness); // Set the outline thickness of the panel shape
+}
+
+void UIPanel::setOrigin(const sf::Vector2f& origin)
+{
+    panelShape.setOrigin(origin); // Set the origin of the panel shape
+}
+
+void UIPanel::setTexture(const sf::Texture& texture, bool resetRect)
+{
+    panelShape.setTexture(&texture, resetRect); // Set the texture of the panel shape
+}

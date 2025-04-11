@@ -35,8 +35,6 @@ using namespace std;
 
 int main() 
 {
-    cout << "Hello, SFML!" << endl;
-
     // Create a window
     ProgramManager programManager; // Create an instance of ProgramManager
     programManager.run(); // Run the program
