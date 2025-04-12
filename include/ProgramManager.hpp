@@ -2,7 +2,7 @@
 #pragma Once 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-
+#include <memory>
 #include "UIConfig.hpp"
 #include "UIPanel.hpp"
 #include "UISearchBar.hpp"
@@ -22,10 +22,12 @@ class ProgramManager
 
     private:
         sf::RenderWindow window; // SFML window object
-        UIPanel leftPanel; // UI panel object.
-        UIPanel rightPanel; // UI panel object.
-        UISearchBar searchBar; // UI search bar object.
-        UIButton buttonMyDay; // UI button object.
+
+
+        std::unique_ptr<UIPanel> leftPanel; // UI panel object.
+        std::unique_ptr<UIPanel> rightPanel; // UI panel object.
+        std::unique_ptr<UISearchBar> searchBar; // UI search bar object.
+        std::unique_ptr<UIButton> buttonMyDay; // UI button object.
         
         void processEvents(); // Process events
         void update(); // Update the program state
