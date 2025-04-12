@@ -6,20 +6,14 @@ UISearchBar::UISearchBar()
     : isActive(false), isFocused(false), isHovered(false), isClicked(false),
       isTextEntered(false), isTextDeleted(false), isTextCleared(false)
 {
-    searchbarShape.setSize(sf::Vector2f(300, 50)); // Default size
-    searchbarShape.setFillColor(sf::Color::White); // Default color
-    searchbarShape.setOutlineColor(sf::Color::Black); // Default outline color
-    searchbarShape.setOutlineThickness(2.0f); // Default outline thickness
-
-    if (!searchbarFont.loadFromFile("assets/fonts/arial.ttf")) // Load default font
+    if (!searchbarFont.loadFromFile(UIConfig::globalFontPath)) // Load font from file
     {
-        std::cerr << "Error loading font for UISearchBar" << std::endl;
+        std::cerr << "Error loading font for search bar" << std::endl;
     }
-
-    searchbarText.setFont(searchbarFont);
-    searchbarText.setCharacterSize(20); // Default text size
-    searchbarText.setFillColor(sf::Color::Black); // Default text color
-    searchbarText.setString(""); // Default text
+    else 
+    {
+        std::cout << "Font loaded successfully for search bar" << std::endl;
+    }
 }
 
 // Destructor
@@ -58,83 +52,84 @@ void UISearchBar::handleEvents(const sf::Event& event)
 // Getters
 sf::Vector2f UISearchBar::getSize() const
 {
-    return searchbarShape.getSize();
+    return searchbarShape.getSize(); // Return the size of the search bar shape
 }
 
 void UISearchBar::getPosition(sf::Vector2f& position) const
 {
-    position = searchbarShape.getPosition();
+    position = searchbarShape.getPosition(); // Get the position of the search bar shape
 }
 
 sf::Color UISearchBar::getColor() const
 {
-    return searchbarShape.getFillColor();
+    return searchbarShape.getFillColor(); // Return the fill color of the search bar shape
 }
 
 sf::Color UISearchBar::getOutlineColor() const
 {
-    return searchbarShape.getOutlineColor();
+    return searchbarShape.getOutlineColor(); // Return the outline color of the search bar shape
 }
 
 float UISearchBar::getOutlineThickness() const
 {
-    return searchbarShape.getOutlineThickness();
+    return searchbarShape.getOutlineThickness(); // Return the outline thickness of the search bar shape
 }
 
 const sf::Vector2f& UISearchBar::getOrigin() const
 {
-    return searchbarShape.getOrigin();
+    return searchbarShape.getOrigin(); // Return the origin of the search bar shape
 }
 
 // Setters
 void UISearchBar::setSize(const sf::Vector2f& size)
 {
-    searchbarShape.setSize(size);
+    searchbarShape.setSize(size); // Set the size of the search bar shape
 }
 
 void UISearchBar::setPosition(const sf::Vector2f& position)
 {
-    searchbarShape.setPosition(position);
+    searchbarShape.setPosition(position); // Set the position of the search bar shape
     searchbarText.setPosition(position.x + 10, position.y + 10); // Adjust text position
 }
 
 void UISearchBar::setColor(const sf::Color& color)
 {
-    searchbarShape.setFillColor(color);
+    searchbarShape.setFillColor(color); // Set the fill color for the search bar shape
 }
 
 void UISearchBar::setOutlineColor(const sf::Color& color)
 {
-    searchbarShape.setOutlineColor(color);
+    searchbarShape.setOutlineColor(color); // Set the outline color for the search bar shape
 }
 
 void UISearchBar::setOutlineThickness(float thickness)
 {
-    searchbarShape.setOutlineThickness(thickness);
+    searchbarShape.setOutlineThickness(thickness); // Set the outline thickness for the search bar shape
 }
 
 void UISearchBar::setOrigin(const sf::Vector2f& origin)
 {
-    searchbarShape.setOrigin(origin);
+    searchbarShape.setOrigin(origin); // Set the origin for the search bar shape
 }
 
 // Additional methods
 void UISearchBar::setText(const std::string& text)
 {
-    searchbarTextString = text;
-    searchbarText.setString(searchbarTextString);
+    searchbarFont.loadFromFile(UIConfig::globalFontPath); // Load font from file
+    searchbarText.setFont(searchbarFont); // Set the font for the text
+    searchbarText.setString(text); // Set the text string
 }
 
 std::string UISearchBar::getText() const
 {
-    return searchbarTextString;
+    return searchbarTextString; // Return the text string
 }
 
 void UISearchBar::clearText()
 {
-    searchbarTextString.clear();
-    searchbarText.setString("");
-    isTextCleared = true;
+    searchbarTextString.clear(); // Clear the text string
+    searchbarText.setString(""); // Clear the text displayed in the search bar
+    isTextCleared = true; // Set the flag to indicate text cleared
 }
 
 

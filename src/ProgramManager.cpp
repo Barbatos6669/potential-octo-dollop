@@ -6,13 +6,14 @@ ProgramManager::ProgramManager()
     leftPanel(std::make_unique<UIPanel>()), 
     rightPanel(std::make_unique<UIPanel>()), 
     searchBar(std::make_unique<UISearchBar>()), 
-    buttonMyDay(std::make_unique<UIButton>()) // Initialize the UI elements
+    buttonMyDay(std::make_unique<UIButton>()),
+    buttonMyTasks(std::make_unique<UIButton>()), 
+    buttonNewList(std::make_unique<UIButton>())
 {
     setupWindow(); // Setup the window properties
     setupPanels(); // Setup the panels properties
     setupSearchBar(); // Setup the search bar properties
-    setupButtons(); // Setup the buttons properties 
-    
+    setupButtons(); // Setup the buttons properties    
 }
 
 // Destructor
@@ -49,7 +50,7 @@ void ProgramManager::setupPanels()
     leftPanel->setOutlineColor(UIConfig::globalAccentColor); // Set the panel outline color
     leftPanel->setOutlineThickness(UIConfig::globalLinePadding); // Set the panel outline thickness
 
-    rightPanel->setSize(sf::Vector2f(UIConfig::baseWidth - UIConfig::panelWidth, UIConfig::panelHeight)); // Set the panel size
+    rightPanel->setSize(sf::Vector2f(UIConfig::baseWidth - UIConfig::panelWidth - UIConfig::spacing, UIConfig::panelHeight)); // Set the panel size
     rightPanel->setPosition(sf::Vector2f(UIConfig::anchorTopLeft.x + UIConfig::panelWidth, UIConfig::anchorTopLeft.y)); // Set the panel position
     rightPanel->setColor(UIConfig::globalTextColor); // Set the panel color
     rightPanel->setOutlineColor(UIConfig::globalAccentColor); // Set the panel outline color
@@ -70,17 +71,54 @@ void ProgramManager::setupSearchBar()
     searchBar->setColor(UIConfig::globalPrimaryColor); // Set the search bar color
     searchBar->setOutlineColor(UIConfig::globalAccentColor); // Set the search bar outline color
     searchBar->setOutlineThickness(UIConfig::globalLinePadding); // Set the search bar outline thickness
+
+    searchBar->setText("Search..."); // Set the default text in the search bar
+    searchBar->searchbarText.setFont(UIConfig::font); // Set the font for the search bar text
+    searchBar->searchbarText.setCharacterSize(UIConfig::globalFontSize); // Set the character size for the search bar text
+    searchBar->setPosition(sf::Vector2f(UIConfig::anchorTopLeft.x + 10, UIConfig::anchorTopLeft.y + 10)); // Set the position of the search bar text
+    searchBar->searchbarText.setFillColor(UIConfig::globalTextColor); // Set the fill color for the search bar text
+    searchBar->searchbarText.setOutlineColor(UIConfig::globalAccentColor); // Set the outline color for the search bar text
 }
 
 void ProgramManager::setupButtons() 
 {
-    // Setup the button properties
+    // Setup the buttons properties for My Day
     buttonMyDay->setSize(sf::Vector2f(UIConfig::panelWidth - 20, UIConfig::panelButtonHeight)); // Set the button size
     buttonMyDay->setPosition(sf::Vector2f(UIConfig::anchorTopLeft.x + 10, UIConfig::anchorTopLeft.y + 10 + UIConfig::panelButtonHeight + 10)); // Set the button position
     buttonMyDay->setColor(UIConfig::globalPrimaryColor); // Set the button color
     buttonMyDay->setOutlineColor(UIConfig::globalAccentColor); // Set the button outline color
     buttonMyDay->setOutlineThickness(UIConfig::globalLinePadding); // Set the button outline thickness
+    buttonMyDay->setText("My Day"); // Set the button text
+    buttonMyDay->buttonText.setFont(UIConfig::font); // Set the font for the button text
+    buttonMyDay->buttonText.setCharacterSize(UIConfig::globalFontSize); // Set the character size for the button text
+    buttonMyDay->setPosition(sf::Vector2f(UIConfig::anchorTopLeft.x + 10, UIConfig::anchorTopLeft.y + 10 + UIConfig::panelButtonHeight + 10)); // Set the position of the button text
+    buttonMyDay->buttonText.setFillColor(UIConfig::globalTextColor); // Set the fill color for the button text
+    buttonMyDay->buttonText.setOutlineColor(UIConfig::globalAccentColor); // Set the outline color for the button text
+
+    // Setup the buttons properties for My Tasks
+    buttonMyTasks->setSize(sf::Vector2f(UIConfig::panelWidth - 20, UIConfig::panelButtonHeight)); // Set the button size
+    buttonMyTasks->setPosition(sf::Vector2f(UIConfig::anchorTopLeft.x + 10, UIConfig::anchorTopLeft.y + 10 + UIConfig::panelButtonHeight + 10 + UIConfig::panelButtonHeight + 10)); // Set the button position
+    buttonMyTasks->setColor(UIConfig::globalPrimaryColor); // Set the button color
+    buttonMyTasks->setOutlineColor(UIConfig::globalAccentColor); // Set the button outline color
+    buttonMyTasks->setOutlineThickness(UIConfig::globalLinePadding); // Set the button outline thickness
+    buttonMyTasks->setText("My Tasks"); // Set the button text
+    buttonMyTasks->buttonText.setFont(UIConfig::font); // Set the font for the button text
+    buttonMyTasks->buttonText.setCharacterSize(UIConfig::globalFontSize); // Set the character size for the button text 
+    buttonMyTasks->setPosition(sf::Vector2f(UIConfig::anchorTopLeft.x + 10, UIConfig::anchorTopLeft.y + 10 + UIConfig::panelButtonHeight + 10 + UIConfig::panelButtonHeight + 10)); // Set the position of the button text
+    buttonMyTasks->buttonText.setFillColor(UIConfig::globalTextColor); // Set the fill color for the button text
+    buttonMyTasks->buttonText.setOutlineColor(UIConfig::globalAccentColor); // Set the outline color for the button text
     
+    buttonNewList->setSize(sf::Vector2f(UIConfig::panelWidth - 20, UIConfig::panelButtonHeight)); // Set the button size
+    buttonNewList->setPosition(sf::Vector2f(UIConfig::anchorTopLeft.x + 10, UIConfig::anchorTopLeft.y + UIConfig::baseHeight - UIConfig::panelButtonHeight - 10)); // Set the button position
+    buttonNewList->setColor(UIConfig::globalPrimaryColor); // Set the button color
+    buttonNewList->setOutlineColor(UIConfig::globalAccentColor); // Set the button outline color
+    buttonNewList->setOutlineThickness(UIConfig::globalLinePadding); // Set the button outline thickness
+    buttonNewList->setText("New List"); // Set the button text
+    buttonNewList->buttonText.setFont(UIConfig::font); // Set the font for the button text
+    buttonNewList->buttonText.setCharacterSize(UIConfig::globalFontSize); // Set the character size for the button text
+    //buttonNewList->setPosition(sf::Vector2f(UIConfig::anchorTopLeft.x + 10, UIConfig::anchorTopLeft.y + 10 + UIConfig::panelButtonHeight + 10 + UIConfig::panelButtonHeight + 10 + UIConfig::panelButtonHeight + 10)); // Set the position of the button text
+    buttonNewList->buttonText.setFillColor(UIConfig::globalTextColor); // Set the fill color for the button text
+    buttonNewList->buttonText.setOutlineColor(UIConfig::globalAccentColor); // Set the outline color for the button text
 }
 
 void ProgramManager::processEvents() 
@@ -98,6 +136,8 @@ void ProgramManager::processEvents()
         rightPanel->handleEvents(event); // Handle events for the right panel
         searchBar->handleEvents(event); // Handle events for the search bar
         buttonMyDay->handleEvents(event); // Handle events for the button
+        buttonMyTasks->handleEvents(event); // Handle events for the button
+        buttonNewList->handleEvents(event); // Handle events for the button
     }    
 }
 
@@ -114,6 +154,8 @@ void ProgramManager::render()
     rightPanel->render(window); // Render the panel
     searchBar->render(window); // Render the search bar
     buttonMyDay->render(window); // Render the button
+    buttonMyTasks->render(window); // Render the button
+    buttonNewList->render(window); // Render the button
 
     window.display(); // Display the contents of the window
 }

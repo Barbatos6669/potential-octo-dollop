@@ -22,12 +22,12 @@ class ProgramManager
 
     private:
         sf::RenderWindow window; // SFML window object
-
-
         std::unique_ptr<UIPanel> leftPanel; // UI panel object.
         std::unique_ptr<UIPanel> rightPanel; // UI panel object.
         std::unique_ptr<UISearchBar> searchBar; // UI search bar object.
         std::unique_ptr<UIButton> buttonMyDay; // UI button object.
+        std::unique_ptr<UIButton> buttonMyTasks; // UI button object.
+        std::unique_ptr<UIButton> buttonNewList; // UI button object.
         
         void processEvents(); // Process events
         void update(); // Update the program state

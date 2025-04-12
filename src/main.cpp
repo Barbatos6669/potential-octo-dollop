@@ -35,6 +35,11 @@ using namespace std;
 
 int main() 
 {
+    // Initialize the UI configuration
+    if (!UIConfig::init()) {
+        std::cerr << "Failed to initialize UIConfig." << std::endl;
+        return -1; // Exit if initialization fails
+    }
     // Create a window
     ProgramManager programManager; // Create an instance of ProgramManager
     programManager.run(); // Run the program
